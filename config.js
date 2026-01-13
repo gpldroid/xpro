@@ -4,8 +4,8 @@ const DAMI_CONFIG = {
     servers: [
         {
             name: "Server 1",
-            http: "http://99gopro.org:8080",
-            https: "https://99gopro.org:8080",
+            http: "http://p1.planet208.com:7000",
+            https: "http://p1.planet208.com:7000/",
             active: true
         },
         {
@@ -18,8 +18,8 @@ const DAMI_CONFIG = {
     
     // إعدادات المستخدم
     credentials: {
-        username: "4640611723208466",
-        password: "4640611723208466",
+        username: "sigma747",
+        password: "747123658",
         expires: "2025-12-31"
     },
     
