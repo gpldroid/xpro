@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; media-src * blob: data:;">
     <title>DAMI X-PRO | عماد الدين لمراني</title>
     
     <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/2965/2965363.png" type="image/x-icon">
@@ -234,5 +235,12 @@
             setLanguage(savedLang);
         });
     </script>
+<script>
+function testLocalPlay() {
+    // مثال لملف MP4 مباشر (استبدل برابطك)
+    playDirectFallback(document.getElementById('player'), 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4');
+}
+</script>
+    
 </body>
 </html>
