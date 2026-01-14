@@ -5,7 +5,7 @@ const DAMI_CONFIG = {
         {
             name: "Server 1",
             http: "http://p1.planet208.com:7000",
-            https: "http://p1.planet208.com:7000/",
+            https: "https://p1.planet208.com:7000/",
             active: true
         },
         {
