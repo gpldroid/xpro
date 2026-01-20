@@ -4,8 +4,8 @@ const DAMI_CONFIG = {
     servers: [
         {
             name: "Server 1",
-            http: "http://p1.planet208.com:7000",
-            https: "https://p1.planet208.com:7000/",
+            http: "http://bouygues-cdn.r1v.us:8080/",
+            https: "https://bouygues-cdn.r1v.us:8080//",
             active: true
         },
         {
@@ -18,9 +18,9 @@ const DAMI_CONFIG = {
     
     // إعدادات المستخدم
     credentials: {
-        username: "sigma747",
-        password: "747123658",
-        expires: "2025-12-31"
+        username: "Soufianebennay",
+        password: "c8:12:0b:12:f1:fd",
+        expires: "2029-12-31"
     },
     
     // إعدادات المشغل
