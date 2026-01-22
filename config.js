@@ -5,7 +5,7 @@ const DAMI_CONFIG = {
         {
             name: "Server 1",
             http: "http://3.3lok3.site:8080/",
-            https: "http://3.3lok3.site:8080/",
+            https: "https://3.3lok3.site:8080/",
             active: true
         },
         {
