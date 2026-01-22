@@ -4,8 +4,8 @@ const DAMI_CONFIG = {
     servers: [
         {
             name: "Server 1",
-            http: "http://bouygues-cdn.r1v.us:8080/",
-            https: "https://bouygues-cdn.r1v.us:8080//",
+            http: "http://3.3lok3.site:8080",
+            https: "https://3.3lok3.site:8080",
             active: true
         },
         {
@@ -18,8 +18,8 @@ const DAMI_CONFIG = {
     
     // إعدادات المستخدم
     credentials: {
-        username: "Soufianebennay",
-        password: "c8:12:0b:12:f1:fd",
+        username: "909088",
+        password: "50667",
         expires: "2029-12-31"
     },
     
