@@ -4,8 +4,8 @@ const DAMI_CONFIG = {
     servers: [
         {
             name: "Server 1",
-            http: "http://3.3lok3.site:8080/",
-            https: "https://3.3lok3.site:8080/",
+            http: "http://x-api.uk/",
+            https: "https://x-api.uk/",
             active: true
         },
         {
@@ -18,8 +18,8 @@ const DAMI_CONFIG = {
     
     // إعدادات المستخدم
     credentials: {
-        username: "909088",
-        password: "50667",
+        username: "7BkxbJPw3qyv8",
+        password: "ChFstacakFB9",
         expires: "2029-12-31"
     },
     
