@@ -886,5 +886,28 @@ function toggleTheme() {
 
 window.onload = () => switchMode('get_live_streams', 'get_live_categories', document.querySelector('.mode-btn'));
 </script>
+    <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyAYD1knxkLldL72owoaDRST0o2ig4SbLqg",
+    authDomain: "xpro-5b96c.firebaseapp.com",
+    projectId: "xpro-5b96c",
+    storageBucket: "xpro-5b96c.firebasestorage.app",
+    messagingSenderId: "136571329375",
+    appId: "1:136571329375:web:151b95f1dbc489a05834ea",
+    measurementId: "G-YC3H5KCL17"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
 </body>
 </html>
