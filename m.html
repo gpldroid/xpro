@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DAMI X-PRO - أفضل منصة لمشاهدة القنوات والأفلام والمسلسلات بجودة عالية">
+    <meta name="keywords" content="DAMI X-PRO, IPTV, Live TV, Movies, Series, Imad Eddine Lamrani">
+    <meta name="author" content="Imad Eddine Lamrani">
+    
+    <meta property="og:title" content="DAMI X-PRO | عماد الدين لمراني">
+    <meta property="og:description" content="أفضل منصة لمشاهدة القنوات والأفلام والمسلسلات بجودة عالية">
+    <meta property="og:image" content="https://cdn-icons-png.flaticon.com/512/2965/2965363.png">
+    
+    <title>DAMI X-PRO | عماد الدين لمراني</title>
+    
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/2965/2965363.png" type="image/x-icon">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Video.js CSS -->
+    <link href="https://vjs.zencdn.net/8.6.1/video-js.css" rel="stylesheet" />
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-body: #050505;
+            --bg-card: #121212;
+            --bg-sidebar: rgba(18, 18, 18, 0.98);
+            --text-main: #ffffff;
+            --text-secondary: #a1a1aa;
+            --accent-color: #d4af37;
+            --border-color: rgba(212, 175, 55, 0.15);
+            --gradient-accent: linear-gradient(135deg, #d4af37 0%, #bf953f 100%);
+        }
+        
+        .light-mode {
+            --bg-body: #F0F2F5;
+            --bg-card: #FFFFFF;
+            --bg-sidebar: #FFFFFF;
+            --text-main: #050505;
+            --text-secondary: #65676B;
+            --accent-color: #1877F2;
+            --border-color: #dddfe2;
+        }
+        
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: 'Cairo', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
+        }
+        
+        /* Video.js Customization */
+        .video-js {
+            width: 100%;
+            height: auto;
+            max-width: 1200px;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: #000;
+        }
+        
+        .vjs-big-play-button {
+            background-color: var(--accent-color) !important;
+            border-color: var(--accent-color) !important;
+            border-radius: 50% !important;
+            width: 80px !important;
+            height: 80px !important;
+            line-height: 80px !important;
+            left: 50% !important;
+            top: 50% !important;
+            transform: translate(-50%, -50%) !important;
+        }
+        
+        .video-js .vjs-control-bar {
+            background: rgba(0, 0, 0, 0.7) !important;
+            backdrop-filter: blur(10px);
+        }
+        
+        .video-js .vjs-play-progress,
+        .video-js .vjs-slider-bar {
+            background: var(--accent-color) !important;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 280px;
+            height: 100%;
+            background: var(--bg-sidebar);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            transition: 0.4s;
+            padding: 20px;
+            box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+        }
+        
+        .sidebar.open {
+            right: 0;
+        }
+        
+        html[dir="ltr"] .sidebar {
+            right: auto;
+            left: -300px;
+        }
+        
+        html[dir="ltr"] .sidebar.open {
+            left: 0;
+        }
+        
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: var(--text-main);
+        }
+        
+        .sidebar-link:hover {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--accent-color);
+        }
+        
+        /* Floating buttons */
+        .whatsapp-btn {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 60px;
+            height: 60px;
+            background: #25d366;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 999;
+            transition: transform 0.3s;
+        }
+        
+        .whatsapp-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 105px;
+            left: 35px;
+            width: 50px;
+            height: 50px;
+            background: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 998;
+            transition: 0.3s;
+        }
+        
+        .back-to-top.show {
+            display: flex;
+        }
+        
+        .back-to-top:hover {
+            transform: translateY(-5px);
+        }
+        
+        .debug-btn {
+            position: fixed;
+            bottom: 160px;
+            left: 35px;
+            width: 50px;
+            height: 50px;
+            background: #dc2626;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 998;
+            transition: transform 0.3s;
+        }
+        
+        .debug-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Media Cards */
+        .media-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        
+        .media-card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        
+        .media-logo {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #1a1a1a;
+        }
+        
+        .mode-btn.active {
+            background: var(--gradient-accent);
+            color: white;
+        }
+        
+        /* Loader */
+        .loader {
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--accent-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Scrollbar */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid var(--accent-color);
+        }
+        
+        /* Alert */
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease-out;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .alert-info { background: #3b82f6; }
+        .alert-success { background: #10b981; }
+        .alert-warning { background: #f59e0b; }
+        .alert-error { background: #ef4444; }
+        
+        /* Quality Selector */
+        .quality-selector {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            background: rgba(0,0,0,0.7);
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .quality-selector.active {
+            display: block;
+        }
+        
+        .quality-btn {
+            display: block;
+            width: 100%;
+            padding: 8px 15px;
+            margin: 5px 0;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        .quality-btn:hover {
+            background: var(--accent-color);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .video-js {
+                height: 300px;
+            }
+            
+            .vjs-big-play-button {
+                width: 60px !important;
+                height: 60px !important;
+                line-height: 60px !important;
+            }
+            
+            #contentGrid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #contentGrid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body class="bg-[var(--bg-body)] text-[var(--text-main)]">
+
+    <!-- Floating Buttons -->
+    <a href="https://wa.me/212783539816" target="_blank" class="whatsapp-btn" title="واتساب">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    
+    <div class="debug-btn" onclick="testPlayback()" title="اختبار التشغيل">
+        <i class="fas fa-bug"></i>
+    </div>
+    
+    <div id="backToTop" class="back-to-top" onclick="window.scrollTo({top:0, behavior:'smooth'})" title="العودة للأعلى">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <!-- Overlay -->
+    <div id="overlay" class="fixed inset-0 bg-black/60 z-[999] hidden" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+        <div class="flex justify-between items-center mb-8 pb-4 border-b border-[var(--border-color)]">
+            <div class="text-xl font-black text-[var(--accent-color)]">DAMI X-PRO</div>
+            <i class="fas fa-times cursor-pointer text-xl hover:text-[var(--accent-color)]" onclick="toggleSidebar()"></i>
+        </div>
+        <nav class="space-y-2">
+            <div class="sidebar-link" onclick="location.reload()">
+                <i class="fas fa-home"></i>
+                <span data-translate="home">الرئيسية</span>
+            </div>
+            <div class="sidebar-link" onclick="openModal('about')">
+                <i class="fas fa-info-circle"></i>
+                <span data-translate="about">من نحن</span>
+            </div>
+            <div class="sidebar-link" onclick="window.open('https://wa.me/212783539816', '_blank')">
+                <i class="fas fa-envelope"></i>
+                <span data-translate="contact">اتصل بنا</span>
+            </div>
+            <div class="sidebar-link" onclick="openModal('privacy')">
+                <i class="fas fa-user-shield"></i>
+                <span data-translate="privacy">سياسة الخصوصية</span>
+            </div>
+            <div class="my-6 border-t border-[var(--border-color)]"></div>
+            <a href="https://dami-xpro.com/download" class="sidebar-link" style="background: var(--gradient-accent); color: white;">
+                <i class="fab fa-android"></i>
+                <span data-translate="download_app">تحميل التطبيق</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Header -->
+    <header class="bg-[var(--bg-card)] border-b border-[var(--border-color)] sticky top-0 z-[50] p-4 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <i class="fas fa-bars cursor-pointer text-xl hover:text-[var(--accent-color)]" onclick="toggleSidebar()"></i>
+            <div class="text-xl font-bold">
+                <span class="text-[var(--accent-color)]">DAMI</span> X-PRO
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <select id="langSelect" onchange="changeLanguage(this.value)" 
+                    class="bg-transparent border border-[var(--border-color)] rounded-lg px-3 py-2 text-sm outline-none text-[var(--text-main)] focus:border-[var(--accent-color)]">
+                <option value="ar">العربية</option>
+                <option value="en">English</option>
+                <option value="fr">Français</option>
+                <option value="es">Español</option>
+            </select>
+            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-gray-800/50 cursor-pointer hover:bg-gray-700/50 transition"
+                 onclick="toggleTheme()" title="تبديل السمة">
+                <i class="fas fa-moon" id="themeIcon"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Video Player -->
+    <div class="player-wrapper w-full bg-black py-4 px-4">
+        <div class="max-w-7xl mx-auto">
+            <video id="my-video" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" 
+                   data-setup='{"fluid": true, "aspectRatio": "16:9"}' playsinline>
+                <p class="vjs-no-js">
+                    لعرض هذا الفيديو، يرجى تمكين JavaScript، والنظر في الترقية إلى متصفح ويب يدعم
+                    <a href="https://videojs.com/html5-video-support/" target="_blank">HTML5 video</a>
+                </p>
+            </video>
+            
+            <div class="quality-selector" id="qualitySelector">
+                <button class="quality-btn" onclick="changeQuality('auto')">تلقائي</button>
+                <button class="quality-btn" onclick="changeQuality('1080')">1080p</button>
+                <button class="quality-btn" onclick="changeQuality('720')">720p</button>
+                <button class="quality-btn" onclick="changeQuality('480')">480p</button>
+                <button class="quality-btn" onclick="changeQuality('360')">360p</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto p-4">
+        <!-- Search -->
+        <div class="relative max-w-2xl mx-auto my-8">
+            <input type="text" id="searchInput" 
+                   class="w-full bg-[var(--bg-card)] border-2 border-[var(--border-color)] rounded-full py-3 px-12 outline-none focus:border-[var(--accent-color)] text-[var(--text-main)] placeholder-[var(--text-secondary)]"
+                   placeholder="ابحث هنا..." data-translate-placeholder="search">
+            <i class="fas fa-search absolute right-5 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]"></i>
+        </div>
+
+        <!-- Mode Selector -->
+        <div class="flex max-w-md mx-auto bg-[var(--bg-card)] border border-[var(--border-color)] p-1 rounded-2xl mb-8">
+            <button onclick="switchMode('live')" class="mode-btn active flex-1 py-2 rounded-xl text-sm font-bold" data-mode="live">
+                <i class="fas fa-tv mr-1"></i><span data-translate="live">مباشر</span>
+            </button>
+            <button onclick="switchMode('movies')" class="mode-btn flex-1 py-2 rounded-xl text-sm font-bold" data-mode="movies">
+                <i class="fas fa-film mr-1"></i><span data-translate="movies">أفلام</span>
+            </button>
+            <button onclick="switchMode('series')" class="mode-btn flex-1 py-2 rounded-xl text-sm font-bold" data-mode="series">
+                <i class="fas fa-tv mr-1"></i><span data-translate="series">مسلسلات</span>
+            </button>
+        </div>
+
+        <!-- Categories -->
+        <div id="categoriesContainer" class="flex overflow-x-auto gap-2 pb-4 mb-6 scrollbar-hide"></div>
+
+        <!-- Content Grid -->
+        <div id="contentGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
+
+        <!-- Loader -->
+        <div id="loader" class="hidden py-8">
+            <div class="loader"></div>
+            <p class="text-center mt-4 text-[var(--text-secondary)]">جاري التحميل...</p>
+        </div>
+
+        <!-- Load More Button -->
+        <button id="loadMoreBtn" onclick="loadMore()" 
+                class="hidden mx-auto mt-8 bg-[var(--bg-card)] border border-[var(--accent-color)] text-[var(--accent-color)] px-10 py-3 rounded-full font-bold hover:bg-[var(--accent-color)] hover:text-white transition duration-300">
+            <i class="fas fa-plus mr-2"></i><span>عرض المزيد</span>
+        </button>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[var(--bg-card)] border-t border-[var(--border-color)] p-10 text-center mt-20">
+        <a href="https://dami-xpro.com/download" 
+           class="inline-flex items-center gap-3 bg-[var(--accent-color)] text-white px-8 py-3 rounded-full font-bold mb-8 hover:scale-105 transition duration-300">
+            <i class="fab fa-android"></i>
+            <span data-translate="download_app">تحميل التطبيق</span>
+        </a>
+        <p class="font-bold text-xl mb-2 text-[var(--text-main)]">DAMI X-PRO &copy; <span id="year"></span></p>
+        <p class="text-[var(--text-secondary)]">Designed & Developed by 
+            <span class="text-[var(--accent-color)] font-semibold">Imad Eddine Lamrani</span>
+        </p>
+    </footer>
+
+    <!-- Modals -->
+    <div id="modal-about" class="modal" onclick="closeModal('about')">
+        <div class="modal-content text-center" onclick="event.stopPropagation()">
+            <h2 class="text-2xl font-bold text-[var(--accent-color)] mb-4" data-translate="about">من نحن</h2>
+            <p class="text-[var(--text-secondary)] mb-6">DAMI X-PRO تطبيق رائد لمشاهدة المحتوى الترفيهي بدقة عالية. تم تطوير هذا النظام بواسطة عماد الدين لمراني.</p>
+            <button class="px-8 py-2 bg-[var(--accent-color)] text-white rounded-lg hover:opacity-90 transition" onclick="closeModal('about')">إغلاق</button>
+        </div>
+    </div>
+
+    <div id="modal-privacy" class="modal" onclick="closeModal('privacy')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h2 class="text-2xl font-bold text-[var(--accent-color)] mb-4 text-center" data-translate="privacy">سياسة الخصوصية</h2>
+            <p class="text-[var(--text-secondary)] text-sm mb-6">نحن نحترم خصوصية المستخدمين. لا نقوم بجمع بيانات شخصية لاستخدامها خارج نطاق تحسين تجربة المشاهدة الخاصة بك.</p>
+            <button class="w-full py-2 bg-[var(--accent-color)] text-white rounded-lg hover:opacity-90 transition" onclick="closeModal('privacy')">موافق</button>
+        </div>
+    </div>
+
+    <!-- Video.js Script -->
+    <script src="https://vjs.zencdn.net/8.6.1/video.min.js"></script>
+    <!-- Video.js HLS Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/@videojs/http-streaming@3.0.2/dist/videojs-http-streaming.min.js"></script>
+    <!-- Quality Selector Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/videojs-contrib-quality-levels@3.0.0/dist/videojs-contrib-quality-levels.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/videojs-hls-quality-selector@1.1.4/dist/videojs-hls-quality-selector.min.js"></script>
+
+    <script>
+        // CONFIGURATION
+        const CONFIG = {
+            api: { 
+                base: "https://x-api.uk", 
+                user: "SoH1THYeDSG", 
+                pass: "F9cjyKSHEFd" 
+            }
+        };
+
+        const translations = {
+            ar: { 
+                home: "الرئيسية", about: "من نحن", contact: "اتصل بنا", 
+                privacy: "سياسة الخصوصية", download_app: "تحميل التطبيق", 
+                live: "مباشر", movies: "أفلام", series: "مسلسلات", 
+                all: "الكل", search: "ابحث هنا..." 
+            },
+            en: { 
+                home: "Home", about: "About Us", contact: "Contact", 
+                privacy: "Privacy", download_app: "Download App", 
+                live: "Live TV", movies: "Movies", series: "Series", 
+                all: "All", search: "Search here..." 
+            },
+            fr: { 
+                home: "Accueil", about: "À propos", contact: "Contact", 
+                privacy: "Confidentialité", download_app: "Télécharger", 
+                live: "Direct", movies: "Films", series: "Séries", 
+                all: "Tout", search: "Chercher..." 
+            },
+            es: { 
+                home: "Inicio", about: "Nosotros", contact: "Contacto", 
+                privacy: "Privacidad", download_app: "Descargar", 
+                live: "En vivo", movies: "Películas", series: "Series", 
+                all: "Todo", search: "Buscar..." 
+            }
+        };
+
+        let currentLang = 'ar';
+        let currentMode = 'live';
+        let allData = [];
+        let displayedCount = 0;
+        let currentCategoryId = 'all';
+        let videoPlayer = null;
+
+        // UI Functions
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('overlay').classList.toggle('hidden');
+        }
+
+        function openModal(id) {
+            document.getElementById('modal-' + id).style.display = 'flex';
+            toggleSidebar();
+        }
+
+        function closeModal(id) {
+            document.getElementById('modal-' + id).style.display = 'none';
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const icon = document.getElementById('themeIcon');
+            icon.className = document.body.classList.contains('light-mode') ? 'fas fa-sun' : 'fas fa-moon';
+            localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+        }
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            localStorage.setItem('language', lang);
+            
+            // Update all translatable elements
+            document.querySelectorAll('[data-translate]').forEach(el => {
+                const key = el.dataset.translate;
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+            
+            // Update placeholder
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.placeholder = translations[lang].search || 'Search...';
+            }
+            
+            // Reload categories with new language
+            fetchCategories();
+        }
+
+        // Scroll to top
+        window.onscroll = () => {
+            const btn = document.getElementById('backToTop');
+            btn.classList.toggle('show', window.scrollY > 400);
+        };
+
+        // Alert System
+        function showAlert(message, type = 'info', duration = 3000) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `
+                <i class="fas fa-${type === 'info' ? 'info-circle' : type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'times-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                alertDiv.style.opacity = '0';
+                alertDiv.style.transform = 'translateX(100%)';
+                setTimeout(() => alertDiv.remove(), 300);
+            }, duration);
+        }
+
+        // API Functions
+        async function fetchAPI(action, params = {}) {
+            const url = new URL(`${CONFIG.api.base}/player_api.php`);
+            url.searchParams.append('username', CONFIG.api.user);
+            url.searchParams.append('password', CONFIG.api.pass);
+            url.searchParams.append('action', action);
+            
+            Object.keys(params).forEach(key => {
+                url.searchParams.append(key, params[key]);
+            });
+            
+            console.log(`📡 API Request: ${url.toString()}`);
+            
+            try {
+                const response = await fetch(url.toString());
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log(`✅ API Response for ${action}:`, data);
+                
+                return data;
+            } catch (error) {
+                console.error(`❌ API Error for ${action}:`, error);
+                showAlert(`خطأ في الاتصال بالسيرفر: ${error.message}`, 'error');
+                return [];
+            }
+        }
+
+        async function fetchCategories() {
+            console.log(`🔄 Fetching categories for mode: ${currentMode}`);
+            
+            const actionMap = {
+                'live': 'get_live_categories',
+                'movies': 'get_vod_categories',
+                'series': 'get_series_categories'
+            };
+            
+            const action = actionMap[currentMode];
+            const categories = await fetchAPI(action);
+            
+            const container = document.getElementById('categoriesContainer');
+            container.innerHTML = '';
+            
+            if (!categories || categories.length === 0) {
+                container.innerHTML = '<p class="text-[var(--text-secondary)] py-2">لا توجد فئات متاحة</p>';
+                return;
+            }
+            
+            // All button
+            const allBtn = document.createElement('button');
+            allBtn.className = 'cat-btn flex-shrink-0 px-5 py-2 rounded-full bg-[var(--accent-color)] text-white text-sm font-bold';
+            allBtn.textContent = translations[currentLang].all;
+            allBtn.onclick = () => loadCategory('all', allBtn);
+            container.appendChild(allBtn);
+            
+            // Category buttons
+            categories.forEach(category => {
+                const btn = document.createElement('button');
+                btn.className = 'cat-btn flex-shrink-0 px-5 py-2 rounded-full bg-[var(--bg-card)] border border-[var(--border-color)] text-sm hover:border-[var(--accent-color)]';
+                btn.textContent = category.category_name;
+                btn.onclick = () => loadCategory(category.category_id, btn);
+                container.appendChild(btn);
+            });
+            
+            loadCategory('all');
+        }
+
+        async function loadCategory(id, btn = null) {
+            if (btn) {
+                document.querySelectorAll('.cat-btn').forEach(b => {
+                    b.classList.remove('bg-[var(--accent-color)]', 'text-white', 'font-bold');
+                    b.classList.add('bg-[var(--bg-card)]');
+                });
+                btn.classList.add('bg-[var(--accent-color)]', 'text-white', 'font-bold');
+            }
+            
+            currentCategoryId = id;
+            
+            const grid = document.getElementById('contentGrid');
+            const loader = document.getElementById('loader');
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            
+            grid.innerHTML = '';
+            loader.classList.remove('hidden');
+            loadMoreBtn.style.display = 'none';
+            
+            const actionMap = {
+                'live': 'get_live_streams',
+                'movies': 'get_vod_streams',
+                'series': 'get_series'
+            };
+            
+            const action = actionMap[currentMode];
+            const params = id !== 'all' ? { category_id: id } : {};
+            
+            allData = await fetchAPI(action, params);
+            displayedCount = 0;
+            
+            loader.classList.add('hidden');
+            
+            if (!allData || allData.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <i class="fas fa-inbox text-4xl text-[var(--text-secondary)] mb-4"></i>
+                        <p class="text-[var(--text-secondary)]">لا توجد محتويات متاحة في هذه الفئة</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            loadMore();
+        }
+
+        function loadMore() {
+            const grid = document.getElementById('contentGrid');
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            const itemsToShow = 30;
+            
+            const nextBatch = allData.slice(displayedCount, displayedCount + itemsToShow);
+            
+            nextBatch.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'media-card group';
+                
+                const imageUrl = item.stream_icon || item.cover || 
+                    `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name || item.title || 'N/A')}&background=1a1a1a&color=d4af37&bold=true&size=150`;
+                
+                const title = item.name || item.title || 'بدون عنوان';
+                const isLive = currentMode === 'live';
+                const isSeries = currentMode === 'series';
+                
+                card.innerHTML = `
+                    <div class="relative">
+                        <img src="${imageUrl}" 
+                             class="media-logo group-hover:scale-105 transition-transform duration-300"
+                             onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(title)}&background=1a1a1a&color=d4af37&bold=true&size=150'">
+                        ${isLive ? `<div class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">مباشر</div>` : ''}
+                        ${isSeries ? `<div class="absolute top-2 right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">مسلسل</div>` : ''}
+                    </div>
+                    <div class="pt-3">
+                        <div class="text-xs font-bold truncate text-center mb-1">${title}</div>
+                        ${item.genre ? `<div class="text-[10px] text-[var(--text-secondary)] truncate text-center">${item.genre}</div>` : ''}
+                    </div>
+                `;
+                
+                card.onclick = () => playStream(item);
+                grid.appendChild(card);
+            });
+            
+            displayedCount += nextBatch.length;
+            loadMoreBtn.style.display = displayedCount < allData.length ? 'block' : 'none';
+        }
+
+        // Video Player Functions
+        function initVideoPlayer() {
+            if (videoPlayer) {
+                videoPlayer.dispose();
+            }
+            
+            videoPlayer = videojs('my-video', {
+                controls: true,
+                autoplay: false,
+                preload: 'auto',
+                fluid: true,
+                responsive: true,
+                playbackRates: [0.5, 1, 1.5, 2],
+                controlBar: {
+                    children: [
+                        'playToggle',
+                        'volumePanel',
+                        'currentTimeDisplay',
+                        'timeDivider',
+                        'durationDisplay',
+                        'progressControl',
+                        'liveDisplay',
+                        'remainingTimeDisplay',
+                        'customControlSpacer',
+                        'playbackRateMenuButton',
+                        'chaptersButton',
+                        'descriptionsButton',
+                        'subsCapsButton',
+                        'audioTrackButton',
+                        'fullscreenToggle'
+                    ]
+                },
+                html5: {
+                    vhs: {
+                        overrideNative: true,
+                        enableLowInitialPlaylist: true,
+                        smoothQualityChange: true,
+                        limitRenditionByPlayerDimensions: true
+                    }
+                }
+            });
+            
+            // Initialize quality selector
+            videoPlayer.qualityLevels();
+            videoPlayer.hlsQualitySelector();
+            
+            // Player events
+            videoPlayer.on('error', function() {
+                const error = videoPlayer.error();
+                console.error('Video.js Error:', error);
+                showAlert(`خطأ في التشغيل: ${error?.message || 'غير معروف'}`, 'error');
+            });
+            
+            videoPlayer.on('loadeddata', function() {
+                console.log('✅ Video loaded successfully');
+            });
+            
+            videoPlayer.on('playing', function() {
+                console.log('▶️ Video is playing');
+                showAlert('جاري التشغيل...', 'success', 2000);
+            });
+        }
+
+        function playStream(item) {
+            console.log('🎬 Playing stream:', item);
+            
+            if (!videoPlayer) {
+                initVideoPlayer();
+            }
+            
+            let streamUrl = '';
+            
+            // Construct stream URL based on mode
+            if (currentMode === 'live') {
+                if (item.stream_url) {
+                    streamUrl = item.stream_url;
+                } else if (item.stream_id) {
+                    streamUrl = `${CONFIG.api.base}/live/${CONFIG.api.user}/${CONFIG.api.pass}/${item.stream_id}`;
+                }
+            } else if (currentMode === 'movies') {
+                if (item.stream_url) {
+                    streamUrl = item.stream_url;
+                } else if (item.vod_id) {
+                    streamUrl = `${CONFIG.api.base}/movie/${CONFIG.api.user}/${CONFIG.api.pass}/${item.vod_id}.${item.container_extension || 'mp4'}`;
+                }
+            } else if (currentMode === 'series') {
+                showAlert('سيتم دعم المسلسلات قريباً', 'info');
+                return;
+            }
+            
+            if (!streamUrl) {
+                showAlert('لا يمكن العثور على رابط التشغيل', 'error');
+                return;
+            }
+            
+            console.log('🔗 Stream URL:', streamUrl);
+            showAlert('جاري تحميل الفيديو...', 'info');
+            
+            // Stop current playback
+            videoPlayer.pause();
+            videoPlayer.src('');
+            
+            // Set new source
+            videoPlayer.src({
+                src: streamUrl,
+                type: streamUrl.includes('.m3u8') ? 'application/x-mpegURL' : 'video/mp4'
+            });
+            
+            // Play the video
+            videoPlayer.play().catch(error => {
+                console.error('Play failed:', error);
+                showAlert('يجب النقر على زر التشغيل يدوياً', 'warning');
+            });
+            
+            // Scroll to player
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function switchMode(mode) {
+            currentMode = mode;
+            
+            // Update active button
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+            
+            // Load new content
+            fetchCategories();
+        }
+
+        // Quality selector
+        function toggleQualitySelector() {
+            document.getElementById('qualitySelector').classList.toggle('active');
+        }
+
+        function changeQuality(quality) {
+            if (videoPlayer) {
+                // Implement quality change logic here
+                console.log(`Changing quality to: ${quality}p`);
+                showAlert(`جودة الفيديو: ${quality === 'auto' ? 'تلقائي' : quality + 'p'}`, 'info');
+            }
+            toggleQualitySelector();
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                loadCategory(currentCategoryId);
+                return;
+            }
+            
+            const filteredData = allData.filter(item => {
+                const title = (item.name || item.title || '').toLowerCase();
+                const desc = (item.description || '').toLowerCase();
+                return title.includes(searchTerm) || desc.includes(searchTerm);
+            });
+            
+            const grid = document.getElementById('contentGrid');
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            
+            grid.innerHTML = '';
+            loadMoreBtn.style.display = 'none';
+            
+            if (filteredData.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <i class="fas fa-search text-4xl text-[var(--text-secondary)] mb-4"></i>
+                        <p class="text-[var(--text-secondary)]">لا توجد نتائج للبحث: "${searchTerm}"</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'media-card';
+                
+                const imageUrl = item.stream_icon || item.cover || 
+                    `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name || item.title || 'N/A')}&background=1a1a1a&color=d4af37`;
+                
+                card.innerHTML = `
+                    <img src="${imageUrl}" class="media-logo">
+                    <div class="text-xs font-bold truncate text-center mt-2">${item.name || item.title}</div>
+                `;
+                
+                card.onclick = () => playStream(item);
+                grid.appendChild(card);
+            });
+        });
+
+        // Test playback
+        async function testPlayback() {
+            console.log('🔧 Running playback test...');
+            
+            if (allData.length > 0) {
+                const testItem = allData[0];
+                console.log('Testing with item:', testItem);
+                playStream(testItem);
+            } else {
+                const testData = await fetchAPI('get_live_streams', { limit: 1 });
+                if (testData && testData.length > 0) {
+                    playStream(testData[0]);
+                } else {
+                    showAlert('لا توجد بيانات للاختبار', 'error');
+                }
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current year
+            document.getElementById('year').textContent = new Date().getFullYear();
+            
+            // Load saved theme
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                document.getElementById('themeIcon').className = 'fas fa-sun';
+            }
+            
+            // Load saved language
+            const savedLang = localStorage.getItem('language') || 'ar';
+            document.getElementById('langSelect').value = savedLang;
+            changeLanguage(savedLang);
+            
+            // Initialize video player
+            initVideoPlayer();
+            
+            // Show welcome message
+            setTimeout(() => {
+                showAlert('مرحباً بك في DAMI X-PRO', 'success', 3000);
+            }, 1000);
+            
+            // Load initial content
+            fetchCategories();
+        });
+    </script>
+</body>
+</html>
