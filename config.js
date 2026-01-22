@@ -4,14 +4,14 @@ const DAMI_CONFIG = {
     servers: [
         {
             name: "Server 1",
-            http: "http://3.3lok3.site:8080",
-            https: "http://3.3lok3.site:8080",
+            http: "http://3.3lok3.site:8080/",
+            https: "http://3.3lok3.site:8080/",
             active: true
         },
         {
             name: "Server 2",
-            http: "http://backup1.99gopro.org:8080",
-            https: "https://backup1.99gopro.org:8080",
+            http: "http://backup1.99gopro.org:8080/",
+            https: "https://backup1.99gopro.org:8080/",
             active: false
         }
     ],
