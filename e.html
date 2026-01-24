@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAMI X-PRO | PRO PLAYER</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+    <style>
+        :root {
+            --primary: #d4af37; /* ذهبي ملكي */
+            --bg-body: #050505;
+            --bg-card: #111111;
+            --text-main: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: 'Cairo', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        /* تحسين مظهر البطاقات السينمائي */
+        .media-card {
+            position: relative;
+            aspect-ratio: 2/3;
+            border-radius: 15px;
+            overflow: hidden;
+            background: #1a1a1a;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .media-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+        }
+
+        .card-img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .media-card:hover .card-img { transform: scale(1.1); filter: brightness(0.5); }
+
+        .card-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            transform: translateY(20px);
+            transition: 0.3s;
+            opacity: 0;
+        }
+
+        .media-card:hover .card-info { transform: translateY(0); opacity: 1; }
+
+        /* مشغل الفيديو */
+        #mainPlayerContainer {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+        }
+
+        .category-pill {
+            white-space: nowrap;
+            padding: 8px 20px;
+            border-radius: 50px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: 0.3s;
+            font-size: 0.85rem;
+        }
+
+        .category-pill.active {
+            background: var(--primary);
+            color: #000;
+            font-weight: bold;
+            border-color: var(--primary);
+        }
+
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body>
+
+    <header class="fixed top-0 w-full z-50 bg-black/60 backdrop-blur-xl border-b border-white/5 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 bg-[var(--primary)] rounded-lg flex items-center justify-center text-black shadow-lg shadow-yellow-600/20">
+                    <i class="fas fa-play text-xl"></i>
+                </div>
+                <h1 class="text-2xl font-black tracking-tighter uppercase">DAMI <span class="text-[var(--primary)]">X-PRO</span></h1>
+            </div>
+
+            <div class="hidden md:flex flex-1 max-w-md mx-10 relative">
+                <input type="text" id="searchBar" placeholder="بحث سريع..." class="w-full bg-white/5 border border-white/10 rounded-xl py-2 px-10 outline-none focus:border-[var(--primary)] transition-all">
+                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
+            </div>
+
+            <div class="flex gap-4">
+                <button onclick="window.open('https://wa.me/212783539816')" class="text-green-500 hover:scale-110 transition"><i class="fab fa-whatsapp text-2xl"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <div class="pt-28 px-6 max-w-7xl mx-auto">
+        <div class="flex flex-wrap justify-center gap-4 mb-8">
+            <button onclick="setMode('live')" id="mode-live" class="mode-btn px-10 py-2.5 rounded-xl font-bold bg-[var(--primary)] text-black shadow-xl shadow-yellow-600/20 transition-all">بث مباشر</button>
+            <button onclick="setMode('movies')" id="mode-movies" class="mode-btn px-10 py-2.5 rounded-xl font-bold bg-white/5 border border-white/10 hover:bg-white/10 transition-all">أفلام</button>
+            <button onclick="setMode('series')" id="mode-series" class="mode-btn px-10 py-2.5 rounded-xl font-bold bg-white/5 border border-white/10 hover:bg-white/10 transition-all">مسلسلات</button>
+        </div>
+
+        <div id="categoryScroller" class="flex gap-3 overflow-x-auto pb-4 scrollbar-hide snap-x">
+            </div>
+    </div>
+
+    <main class="px-6 py-6 max-w-7xl mx-auto min-h-screen">
+        <div id="mainGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+            </div>
+        <div id="loader" class="hidden flex flex-col items-center py-20">
+            <div class="w-12 h-12 border-4 border-[var(--primary)] border-t-transparent rounded-full animate-spin"></div>
+            <p class="mt-4 text-gray-400 animate-pulse text-sm">جاري جلب البيانات من السيرفر...</p>
+        </div>
+    </main>
+
+    <div id="mainPlayerContainer">
+        <div class="p-4 flex justify-between items-center bg-gradient-to-b from-black to-transparent">
+            <h2 id="nowPlaying" class="font-bold truncate max-w-md">اسم القناة</h2>
+            <div class="flex gap-4">
+                <button onclick="openInVLC()" class="bg-orange-600 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2">
+                    <i class="fas fa-external-link-alt"></i> VLC
+                </button>
+                <button onclick="closePlayer()" class="bg-white/10 w-10 h-10 rounded-full hover:bg-red-600 transition"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+        <div class="flex-grow flex items-center justify-center p-4">
+            <div class="w-full max-w-5xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-white/5">
+                <video id="videoElement" controls playsinline class="w-full h-full"></video>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات الاتصال (المستخرجة من طلبك)
+        const SERVER = {
+            base: "https://x-api.uk",
+            user: "WD7zjb5LTuoDw",
+            pass: "DrqM2s9Tu7fy",
+            output: "mpegts" // تم الالتزام بصيغة طلبك
+        };
+
+        let currentMode = 'live';
+        let hlsProvider = null;
+        let playerInstance = null;
+        let lastStreamUrl = "";
+
+        document.addEventListener('DOMContentLoaded', () => {
+            playerInstance = new Plyr('#videoElement', { title: 'DAMI X-PRO' });
+            fetchCats();
+        });
+
+        // جلب التصنيفات
+        async function fetchCats() {
+            const actions = { live: 'get_live_categories', movies: 'get_vod_categories', series: 'get_series_categories' };
+            const response = await fetch(`${SERVER.base}/player_api.php?username=${SERVER.user}&password=${SERVER.pass}&action=${actions[currentMode]}`);
+            const data = await response.json();
+            
+            const container = document.getElementById('categoryScroller');
+            container.innerHTML = `<button onclick="loadSection('all', this)" class="category-pill active snap-start">الكل</button>`;
+            
+            data.forEach(cat => {
+                container.innerHTML += `<button onclick="loadSection('${cat.category_id}', this)" class="category-pill snap-start whitespace-nowrap">${cat.category_name}</button>`;
+            });
+            loadSection('all');
+        }
+
+        // جلب المحتوى
+        async function loadSection(catId, btn) {
+            if(btn) {
+                document.querySelectorAll('.category-pill').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+
+            const grid = document.getElementById('mainGrid');
+            const loader = document.getElementById('loader');
+            grid.innerHTML = "";
+            loader.classList.remove('hidden');
+
+            const actions = { live: 'get_live_streams', movies: 'get_vod_streams', series: 'get_series' };
+            const catQuery = catId !== 'all' ? `&category_id=${catId}` : '';
+            
+            const response = await fetch(`${SERVER.base}/player_api.php?username=${SERVER.user}&password=${SERVER.pass}&action=${actions[currentMode]}${catQuery}`);
+            const items = await response.json();
+            
+            loader.classList.add('hidden');
+            
+            items.slice(0, 60).forEach(item => { // عرض أول 60 عنصر للأداء
+                const card = document.createElement('div');
+                card.className = "media-card group";
+                const img = item.stream_icon || item.cover || 'https://via.placeholder.com/300x450?text=DAMI+PRO';
+                const name = item.name || item.title;
+                
+                card.innerHTML = `
+                    <img src="${img}" class="card-img" loading="lazy">
+                    <div class="card-info">
+                        <p class="text-xs font-bold truncate">${name}</p>
+                        <p class="text-[10px] text-gray-400 mt-1 uppercase">${currentMode}</p>
+                    </div>
+                `;
+                
+                card.onclick = () => playMedia(item.stream_id || item.vod_id, item.container_extension || 'mp4', name);
+                grid.appendChild(card);
+            });
+        }
+
+        // منطق التشغيل
+        function playMedia(id, ext, title) {
+            const container = document.getElementById('mainPlayerContainer');
+            const video = document.getElementById('videoElement');
+            document.getElementById('nowPlaying').textContent = title;
+
+            // بناء رابط البث بناءً على البروتوكول المطلوب
+            if(currentMode === 'live') {
+                lastStreamUrl = `${SERVER.base}/live/${SERVER.user}/${SERVER.pass}/${id}.m3u8`;
+            } else {
+                lastStreamUrl = `${SERVER.base}/movie/${SERVER.user}/${SERVER.pass}/${id}.${ext}`;
+            }
+
+            container.style.display = "flex";
+
+            if (Hls.isSupported() && lastStreamUrl.includes('m3u8')) {
+                if (hlsProvider) hlsProvider.destroy();
+                hlsProvider = new Hls();
+                hlsProvider.loadSource(lastStreamUrl);
+                hlsProvider.attachMedia(video);
+                hlsProvider.on(Hls.Events.MANIFEST_PARSED, () => video.play());
+            } else {
+                video.src = lastStreamUrl;
+                video.play().catch(() => {
+                    alert("عذراً، هذا التنسيق يتطلب مشغل خارجي مثل VLC");
+                });
+            }
+        }
+
+        function closePlayer() {
+            const video = document.getElementById('videoElement');
+            video.pause();
+            if (hlsProvider) hlsProvider.destroy();
+            document.getElementById('mainPlayerContainer').style.display = "none";
+        }
+
+        function openInVLC() {
+            // محاولة فتح الرابط في تطبيق VLC مباشرة
+            window.location.href = `vlc://${lastStreamUrl}`;
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(b => {
+                b.classList.replace('bg-[var(--primary)]', 'bg-white/5');
+                b.classList.remove('text-black', 'shadow-xl');
+            });
+            const activeBtn = document.getElementById('mode-' + mode);
+            activeBtn.classList.replace('bg-white/5', 'bg-[var(--primary)]');
+            activeBtn.classList.add('text-black', 'shadow-xl');
+            fetchCats();
+        }
+
+        // البحث البسيط
+        document.getElementById('searchBar').addEventListener('input', (e) => {
+            const val = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.media-card');
+            cards.forEach(card => {
+                const txt = card.textContent.toLowerCase();
+                card.style.display = txt.includes(val) ? 'block' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>
