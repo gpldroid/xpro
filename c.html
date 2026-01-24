@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAMI X-PRO | المطور</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+    <style>
+        :root {
+            --primary: #E50914;
+            --bg-body: #080808;
+            --bg-card: #121212;
+            --text-color: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-color);
+            font-family: 'Cairo', sans-serif;
+            user-select: none;
+        }
+
+        /* Poster Styling */
+        .media-card {
+            position: relative;
+            aspect-ratio: 2/3;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #1a1a1a;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            border: 1px solid #222;
+        }
+
+        .media-card:hover {
+            transform: scale(1.08);
+            z-index: 20;
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(229, 9, 20, 0.4);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            opacity: 0.9;
+        }
+
+        /* Player Modal */
+        #playerOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.98);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-container {
+            width: 90%;
+            max-width: 1100px;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0,0,0,1);
+        }
+
+        /* UI Helpers */
+        .mode-btn.active {
+            background-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary);
+        }
+
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body>
+
+    <header class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md px-6 py-4 flex justify-between items-center border-b border-white/10">
+        <div class="flex items-center gap-3">
+            <span class="text-2xl font-black text-white tracking-tighter">DAMI <span class="text-[var(--primary)]">X-PRO</span></span>
+        </div>
+        
+        <div class="flex-1 max-w-xl mx-8 hidden md:block">
+            <div class="relative">
+                <input type="text" id="searchBox" placeholder="ابحث عن أفلام، قنوات..." class="w-full bg-white/10 border border-white/20 rounded-full py-2 px-12 outline-none focus:border-[var(--primary)] transition">
+                <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            </div>
+        </div>
+
+        <button onclick="location.reload()" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20">
+            <i class="fas fa-sync-alt"></i>
+        </button>
+    </header>
+
+    <nav class="pt-28 px-6 max-w-7xl mx-auto flex flex-col gap-6">
+        <div class="flex justify-center gap-4">
+            <button onclick="changeMode('live')" id="btn-live" class="mode-btn active px-8 py-2 rounded-full font-bold text-sm transition-all border border-white/10">قنوات مباشرة</button>
+            <button onclick="changeMode('movies')" id="btn-movies" class="mode-btn px-8 py-2 rounded-full font-bold text-sm transition-all border border-white/10 text-gray-400">أفلام (VOD)</button>
+            <button onclick="changeMode('series')" id="btn-series" class="mode-btn px-8 py-2 rounded-full font-bold text-sm transition-all border border-white/10 text-gray-400">مسلسلات</button>
+        </div>
+
+        <div id="catList" class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x">
+            </div>
+    </nav>
+
+    <main class="px-6 py-8 max-w-7xl mx-auto min-h-screen">
+        <div id="contentGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+            </div>
+        <div id="loader" class="hidden text-center py-20"><i class="fas fa-circle-notch fa-spin text-4xl text-[var(--primary)]"></i></div>
+        <button id="btnMore" onclick="renderMore()" class="hidden mx-auto mt-12 bg-white/10 px-10 py-3 rounded-full hover:bg-[var(--primary)] transition font-bold border border-white/10">مشاهدة المزيد</button>
+    </main>
+
+    <div id="playerOverlay">
+        <div class="flex justify-between w-[90%] max-w-[1100px] mb-4">
+            <h2 id="streamTitle" class="text-xl font-bold">جاري التشغيل...</h2>
+            <div class="flex gap-4">
+                <button onclick="openExternal()" class="bg-blue-600 px-4 py-2 rounded-lg text-sm font-bold"><i class="fas fa-external-link-alt ml-2"></i>مشغل خارجي</button>
+                <button onclick="closePlayer()" class="bg-white/10 w-10 h-10 rounded-full hover:bg-red-600"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+        <div class="video-container">
+            <video id="v-player" controls playsinline></video>
+        </div>
+    </div>
+
+    <script>
+        const API = { base: "https://x-api.uk", user: "WD7zjb5LTuoDw", pass: "DrqM2s9Tu7fy" };
+        let currentMode = 'live';
+        let allData = [];
+        let pagedData = [];
+        let limit = 30;
+        let hls = null;
+        let plyr = null;
+        let activeLink = "";
+
+        document.addEventListener('DOMContentLoaded', () => {
+            plyr = new Plyr('#v-player');
+            fetchCategories();
+        });
+
+        async function fetchCategories() {
+            const actions = { live: 'get_live_categories', movies: 'get_vod_categories', series: 'get_series_categories' };
+            const res = await fetch(`${API.base}/player_api.php?username=${API.user}&password=${API.pass}&action=${actions[currentMode]}`);
+            const cats = await res.json();
+            
+            const list = document.getElementById('catList');
+            list.innerHTML = `<button onclick="loadContent('all', this)" class="bg-[var(--primary)] px-6 py-1.5 rounded-full text-sm font-bold snap-start">الكل</button>`;
+            cats.forEach(c => {
+                list.innerHTML += `<button onclick="loadContent('${c.category_id}', this)" class="bg-white/5 border border-white/10 px-6 py-1.5 rounded-full text-sm hover:bg-white/10 snap-start whitespace-nowrap">${c.category_name}</button>`;
+            });
+            loadContent('all');
+        }
+
+        async function loadContent(catId, btn) {
+            if(btn) {
+                document.querySelectorAll('#catList button').forEach(b => b.className = "bg-white/5 border border-white/10 px-6 py-1.5 rounded-full text-sm hover:bg-white/10 snap-start whitespace-nowrap");
+                btn.className = "bg-[var(--primary)] px-6 py-1.5 rounded-full text-sm font-bold snap-start";
+            }
+
+            const grid = document.getElementById('contentGrid');
+            const loader = document.getElementById('loader');
+            grid.innerHTML = "";
+            loader.classList.remove('hidden');
+
+            const actions = { live: 'get_live_streams', movies: 'get_vod_streams', series: 'get_series' };
+            const url = `${API.base}/player_api.php?username=${API.user}&password=${API.pass}&action=${actions[currentMode]}${catId !== 'all' ? '&category_id='+catId : ''}`;
+            
+            const res = await fetch(url);
+            allData = await res.json();
+            
+            loader.classList.add('hidden');
+            pagedData = 0;
+            renderMore();
+        }
+
+        function renderMore() {
+            const grid = document.getElementById('contentGrid');
+            const chunk = allData.slice(pagedData, pagedData + limit);
+            
+            chunk.forEach(item => {
+                const title = item.name || item.title;
+                const img = item.stream_icon || item.cover || 'https://via.placeholder.com/300x450?text=No+Image';
+                const id = item.stream_id || item.vod_id || item.series_id;
+                const ext = item.container_extension || 'mp4';
+
+                const card = document.createElement('div');
+                card.className = "media-card";
+                card.innerHTML = `
+                    <img src="${img}" class="card-img" onerror="this.src='https://via.placeholder.com/300x450?text=Error'">
+                    <div class="card-overlay">
+                        <div class="text-sm font-bold truncate">${title}</div>
+                        ${item.rating ? `<div class="text-xs text-yellow-400 mt-1"><i class="fas fa-star ml-1"></i>${item.rating}</div>` : ''}
+                    </div>
+                `;
+                card.onclick = () => initPlay(id, ext, title);
+                grid.appendChild(card);
+            });
+
+            pagedData += limit;
+            document.getElementById('btnMore').classList.toggle('hidden', pagedData >= allData.length);
+        }
+
+        function initPlay(id, ext, title) {
+            const overlay = document.getElementById('playerOverlay');
+            const video = document.getElementById('v-player');
+            document.getElementById('streamTitle').textContent = title;
+
+            // بناء الرابط HTTPS
+            if(currentMode === 'live') {
+                activeLink = `${API.base.replace('http:', 'https:')}/live/${API.user}/${API.pass}/${id}.m3u8`;
+            } else {
+                activeLink = `${API.base.replace('http:', 'https:')}/movie/${API.user}/${API.pass}/${id}.${ext}`;
+            }
+
+            overlay.style.display = "flex";
+
+            if (Hls.isSupported() && activeLink.includes('m3u8')) {
+                if (hls) hls.destroy();
+                hls = new Hls();
+                hls.loadSource(activeLink);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
+            } else {
+                video.src = activeLink;
+                video.play().catch(() => {
+                    alert("المتصفح لا يدعم هذا التنسيق مباشرة (خاصة MKV). يرجى استخدام المشغل الخارجي.");
+                });
+            }
+        }
+
+        function closePlayer() {
+            const video = document.getElementById('v-player');
+            video.pause();
+            if (hls) hls.destroy();
+            document.getElementById('playerOverlay').style.display = "none";
+        }
+
+        function openExternal() {
+            window.location.href = activeLink;
+        }
+
+        function changeMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.add('text-gray-400'));
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + mode).classList.remove('text-gray-400');
+            document.getElementById('btn-' + mode).classList.add('active');
+            fetchCategories();
+        }
+
+        // البحث
+        document.getElementById('searchBox').addEventListener('input', (e) => {
+            const q = e.target.value.toLowerCase();
+            if(q.length < 2) return;
+            const filtered = allData.filter(i => (i.name || i.title || "").toLowerCase().includes(q));
+            const grid = document.getElementById('contentGrid');
+            grid.innerHTML = "";
+            filtered.slice(0, 30).forEach(item => {
+                // تكرار نفس منطق الـ Render للبحث
+                const title = item.name || item.title;
+                const img = item.stream_icon || item.cover;
+                const card = document.createElement('div');
+                card.className = "media-card";
+                card.innerHTML = `<img src="${img}" class="card-img"><div class="card-overlay"><div class="text-sm font-bold truncate">${title}</div></div>`;
+                card.onclick = () => initPlay(item.stream_id || item.vod_id, item.container_extension, title);
+                grid.appendChild(card);
+            });
+        });
+    </script>
+</body>
+</html>
