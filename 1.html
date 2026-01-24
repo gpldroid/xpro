@@ -1,0 +1,1844 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DAMI X-PRO - أفضل منصة لمشاهدة القنوات والأفلام والمسلسلات بجودة عالية">
+    <meta name="keywords" content="DAMI X-PRO, IPTV, Live TV, Movies, Series, Imad Eddine Lamrani">
+    <meta name="author" content="Imad Eddine Lamrani">
+    
+    <meta property="og:title" content="DAMI X-PRO | عماد الدين لمراني">
+    <meta property="og:description" content="أفضل منصة لمشاهدة القنوات والأفلام والمسلسلات بجودة عالية">
+    <meta property="og:image" content="https://cdn-icons-png.flaticon.com/512/2965/2965363.png">
+    
+    <title>DAMI X-PRO | عماد الدين لمراني</title>
+    
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/2965/2965363.png" type="image/x-icon">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- JPlayer للتشغيل المتقدم -->
+    <link href="https://cdn.jsdelivr.net/npm/jplayer@2.9.2/dist/skin/blue.monday/css/jplayer.blue.monday.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/jplayer@2.9.2/dist/jplayer/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jplayer@2.9.2/dist/jplayer/jquery.jplayer.min.js"></script>
+    
+    <style>
+        :root {
+            --bg-body: #050505; 
+            --bg-card: #121212; 
+            --bg-sidebar: rgba(18, 18, 18, 0.98);
+            --text-main: #ffffff; 
+            --text-secondary: #a1a1aa; 
+            --accent-color: #d4af37;
+            --border-color: rgba(212, 175, 55, 0.15); 
+            --gradient-accent: linear-gradient(135deg, #d4af37 0%, #bf953f 100%);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+        
+        .light-mode {
+            --bg-body: #F0F2F5; 
+            --bg-card: #FFFFFF; 
+            --bg-sidebar: #FFFFFF;
+            --text-main: #050505; 
+            --text-secondary: #65676B; 
+            --accent-color: #1877F2; 
+            --border-color: #dddfe2;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+        
+        body { 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            font-family: 'Cairo', sans-serif; 
+            transition: 0.3s; 
+            overflow-x: hidden; 
+        }
+        
+        /* Sidebar */
+        .sidebar { 
+            position: fixed; 
+            top: 0; 
+            right: -300px; 
+            width: 280px; 
+            height: 100%; 
+            background: var(--bg-sidebar); 
+            backdrop-filter: blur(15px); 
+            z-index: 1000; 
+            transition: 0.4s; 
+            padding: 20px; 
+            box-shadow: -5px 0 20px rgba(0,0,0,0.5); 
+        }
+        
+        .sidebar.open { right: 0; }
+        
+        html[dir="ltr"] .sidebar { right: auto; left: -300px; }
+        html[dir="ltr"] .sidebar.open { left: 0; }
+        
+        .sidebar-link { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            padding: 12px; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            color: var(--text-main); 
+        }
+        
+        .sidebar-link:hover { 
+            background: rgba(212, 175, 55, 0.1); 
+            color: var(--accent-color); 
+        }
+
+        /* Floating buttons */
+        .whatsapp-btn { 
+            position: fixed; 
+            bottom: 30px; 
+            left: 30px; 
+            width: 60px; 
+            height: 60px; 
+            background: #25d366; 
+            color: white; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 30px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
+            z-index: 999; 
+        }
+        
+        .back-to-top { 
+            position: fixed; 
+            bottom: 105px; 
+            left: 35px; 
+            width: 50px; 
+            height: 50px; 
+            background: var(--accent-color); 
+            color: white; 
+            border-radius: 50%; 
+            display: none; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 20px; 
+            cursor: pointer; 
+            z-index: 998; 
+            transition: 0.3s; 
+        }
+        
+        .back-to-top.show { display: flex; }
+
+        .media-card { 
+            background: var(--bg-card); 
+            border-radius: 12px; 
+            padding: 10px; 
+            border: 1px solid var(--border-color); 
+            transition: 0.3s; 
+            cursor: pointer; 
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .media-card:hover { 
+            border-color: var(--accent-color); 
+            transform: translateY(-5px); 
+        }
+        
+        .media-logo { 
+            width: 100%; 
+            aspect-ratio: 16/9; 
+            object-fit: cover; 
+            border-radius: 8px; 
+            transition: transform 0.3s;
+        }
+        
+        .media-card:hover .media-logo {
+            transform: scale(1.05);
+        }
+        
+        .mode-btn.active { 
+            background: var(--gradient-accent); 
+            color: white; 
+        }
+        
+        .modal { 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0,0,0,0.85); 
+            display: none; 
+            align-items: center; 
+            justify-content: center; 
+            z-index: 2000; 
+            padding: 20px; 
+        }
+        
+        .modal-content { 
+            background: var(--bg-card); 
+            padding: 30px; 
+            border-radius: 20px; 
+            max-width: 500px; 
+            width: 100%; 
+            border: 1px solid var(--accent-color); 
+            text-align: center; 
+        }
+        
+        /* Loader */
+        .loader { 
+            border: 4px solid rgba(255,255,255,0.1); 
+            border-left-color: var(--accent-color); 
+            border-radius: 50%; 
+            width: 40px; 
+            height: 40px; 
+            animation: spin 1s linear infinite; 
+            margin: 20px auto; 
+        }
+        
+        @keyframes spin { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+        
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Player Container */
+        .player-section {
+            background: #000;
+            border-radius: 12px;
+            margin: 20px auto;
+            max-width: 1200px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: none;
+        }
+        
+        .player-section.active {
+            display: block;
+        }
+        
+        .player-header {
+            background: linear-gradient(135deg, var(--accent-color), #bf953f);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .player-controls {
+            background: rgba(0,0,0,0.7);
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .player-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .player-btn:hover {
+            background: rgba(212, 175, 55, 0.5);
+            transform: scale(1.05);
+        }
+        
+        .player-btn.active {
+            background: var(--accent-color);
+            color: black;
+        }
+        
+        /* HTML5 Video Player */
+        .video-player-container {
+            position: relative;
+            width: 100%;
+            background: #000;
+        }
+        
+        #html5Player {
+            width: 100%;
+            height: auto;
+            min-height: 400px;
+            max-height: 70vh;
+            display: block;
+        }
+        
+        .player-info {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            backdrop-filter: blur(5px);
+        }
+        
+        /* Quality Selector */
+        .quality-selector {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            backdrop-filter: blur(5px);
+            z-index: 10;
+        }
+        
+        /* Player Loading */
+        .player-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            gap: 20px;
+        }
+        
+        /* Custom Controls */
+        .custom-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            padding: 20px;
+            display: none;
+        }
+        
+        .video-player-container:hover .custom-controls {
+            display: block;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 5px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--accent-color);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.1s;
+        }
+        
+        .control-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+        }
+        
+        .volume-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .volume-slider {
+            width: 100px;
+            height: 5px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .volume-level {
+            height: 100%;
+            background: white;
+            border-radius: 3px;
+            width: 50%;
+        }
+        
+        /* Playlist */
+        .playlist-container {
+            max-height: 400px;
+            overflow-y: auto;
+            background: var(--bg-card);
+            border-radius: 12px;
+            margin-top: 20px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .playlist-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .playlist-item:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+        
+        .playlist-item.active {
+            background: rgba(212, 175, 55, 0.2);
+            border-right: 3px solid var(--accent-color);
+        }
+        
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--bg-card);
+            color: var(--text-main);
+            padding: 15px 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 3000;
+            display: none;
+            max-width: 300px;
+        }
+        
+        .toast.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* Media Badges */
+        .media-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            backdrop-filter: blur(5px);
+        }
+        
+        /* Category Badges */
+        .category-badge {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--accent-color);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 5px;
+        }
+        
+        /* Favorites */
+        .favorite-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+        }
+        
+        .favorite-btn.active {
+            color: #ef4444;
+        }
+        
+        /* Search Results */
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: var(--bg-card);
+            border-radius: 12px;
+            margin-top: 5px;
+            border: 1px solid var(--border-color);
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            z-index: 100;
+        }
+        
+        .search-results.show {
+            display: block;
+        }
+        
+        /* Animation for cards */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .media-card {
+            animation: fadeIn 0.3s ease;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .player-controls {
+                flex-wrap: wrap;
+            }
+            
+            .player-btn {
+                flex: 1;
+                min-width: 120px;
+                justify-content: center;
+            }
+            
+            .quality-selector {
+                top: auto;
+                bottom: 60px;
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="https://wa.me/212783539816" target="_blank" class="whatsapp-btn">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+    
+    <div id="backToTop" class="back-to-top" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <div class="flex items-center gap-3">
+            <i class="fas fa-check-circle text-green-500" id="toastIcon"></i>
+            <div>
+                <div class="font-bold" id="toastTitle">تم</div>
+                <div class="text-sm" id="toastMessage">تمت العملية بنجاح</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="overlay" class="fixed inset-0 bg-black/60 z-[999] hidden" onclick="toggleSidebar()"></div>
+
+    <aside id="sidebar" class="sidebar">
+        <div class="flex justify-between items-center mb-8 pb-4 border-b border-[var(--border-color)]">
+            <div class="text-xl font-black text-[var(--accent-color)]">DAMI X-PRO</div>
+            <i class="fas fa-times cursor-pointer text-xl" onclick="toggleSidebar()"></i>
+        </div>
+        
+        <nav>
+            <div class="sidebar-link" onclick="location.reload()">
+                <i class="fas fa-home"></i> 
+                <span data-translate="home">الرئيسية</span>
+            </div>
+            
+            <div class="sidebar-link" onclick="openModal('about')">
+                <i class="fas fa-info-circle"></i> 
+                <span data-translate="about">من نحن</span>
+            </div>
+            
+            <div class="sidebar-link" onclick="window.open('https://wa.me/212783539816')">
+                <i class="fas fa-envelope"></i> 
+                <span data-translate="contact">اتصل بنا</span>
+            </div>
+            
+            <div class="sidebar-link" onclick="openModal('privacy')">
+                <i class="fas fa-user-shield"></i> 
+                <span data-translate="privacy">سياسة الخصوصية</span>
+            </div>
+            
+            <div class="sidebar-link" onclick="showFavorites()">
+                <i class="fas fa-heart"></i> 
+                <span>المفضلة</span>
+            </div>
+            
+            <div class="my-4 border-t border-[var(--border-color)]"></div>
+            
+            <a href="https://dami-xpro.com/download" class="sidebar-link" style="background: var(--gradient-accent); color: white;">
+                <i class="fab fa-android" style="color: white;"></i> 
+                <span data-translate="download_app">تحميل التطبيق</span>
+            </a>
+        </nav>
+    </aside>
+
+    <header class="bg-[var(--bg-card)] border-b border-[var(--border-color)] sticky top-0 z-[50] p-4 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <i class="fas fa-bars cursor-pointer text-xl" onclick="toggleSidebar()"></i>
+            <div class="text-xl font-bold">
+                <span class="text-[var(--accent-color)]">DAMI</span> X-PRO
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-3">
+            <select id="langSelect" onchange="changeLanguage(this.value)" class="bg-transparent border border-[var(--border-color)] rounded-lg px-2 py-1 text-sm outline-none text-[var(--text-main)]">
+                <option value="ar">العربية</option>
+                <option value="en">English</option>
+                <option value="fr">Français</option>
+                <option value="es">Español</option>
+            </select>
+            
+            <div class="w-10 h-10 rounded-full flex items-center justify-center bg-gray-800/50 cursor-pointer" onclick="toggleTheme()">
+                <i class="fas fa-moon" id="themeIcon"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Player Section -->
+    <div id="playerSection" class="player-section">
+        <div class="player-header">
+            <div>
+                <div class="font-bold">
+                    <i class="fas fa-play-circle mr-2"></i>
+                    <span id="playerTitle">المشغل</span>
+                </div>
+                <div class="text-sm" id="playerSubtitle">DAMI X-PRO Player</div>
+            </div>
+            
+            <div>
+                <button onclick="hidePlayer()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm">
+                    <i class="fas fa-times mr-2"></i>إغلاق المشغل
+                </button>
+            </div>
+        </div>
+        
+        <div class="video-player-container">
+            <div class="player-loading" id="playerLoading">
+                <div class="loader"></div>
+                <div>جار تحميل المحتوى...</div>
+            </div>
+            
+            <div class="player-info" id="playerInfo">
+                <i class="fas fa-info-circle mr-2"></i>
+                <span>جاري التحميل...</span>
+            </div>
+            
+            <div class="quality-selector" id="qualitySelector">
+                <select id="qualitySelect" onchange="changeQuality(this.value)" class="bg-transparent border-none text-white outline-none">
+                    <option value="auto">جودة تلقائية</option>
+                    <option value="360">360p</option>
+                    <option value="480">480p</option>
+                    <option value="720">720p</option>
+                    <option value="1080">1080p</option>
+                </select>
+            </div>
+            
+            <video id="html5Player" controls preload="metadata" playsinline crossorigin="anonymous">
+                <p>متصفحك لا يدعم تشغيل الفيديو. يرجى استخدام متصفح حديث.</p>
+            </video>
+            
+            <div class="custom-controls">
+                <div class="progress-container" onclick="seekVideo(event)">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                
+                <div class="control-buttons">
+                    <div class="flex items-center gap-4">
+                        <button onclick="togglePlay()" class="text-white text-xl">
+                            <i class="fas fa-play" id="playIcon"></i>
+                        </button>
+                        
+                        <div class="text-white text-sm">
+                            <span id="currentTime">00:00</span> / 
+                            <span id="totalTime">00:00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="volume-container">
+                        <i class="fas fa-volume-up text-white" id="volumeIcon"></i>
+                        <div class="volume-slider" onclick="changeVolume(event)">
+                            <div class="volume-level" id="volumeLevel"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-3">
+                        <button onclick="toggleMute()" class="text-white">
+                            <i class="fas fa-volume-mute" id="muteIcon"></i>
+                        </button>
+                        
+                        <button onclick="toggleFullscreen()" class="text-white">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="player-controls">
+            <button class="player-btn active" onclick="playerMode='hls'; updatePlayerMode()">
+                <i class="fas fa-satellite-dish"></i>
+                <span>HLS</span>
+            </button>
+            
+            <button class="player-btn" onclick="playerMode='m3u8'; updatePlayerMode()">
+                <i class="fas fa-broadcast-tower"></i>
+                <span>M3U8</span>
+            </button>
+            
+            <button class="player-btn" onclick="playerMode='direct'; updatePlayerMode()">
+                <i class="fas fa-file-video"></i>
+                <span>مباشر</span>
+            </button>
+            
+            <button class="player-btn" onclick="refreshStream()">
+                <i class="fas fa-redo"></i>
+                <span>إعادة تحميل</span>
+            </button>
+            
+            <button class="player-btn" onclick="downloadMedia()">
+                <i class="fas fa-download"></i>
+                <span>تحميل</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Playlist Container -->
+    <div id="playlistContainer" class="playlist-container hidden">
+        <div class="p-4 border-b border-[var(--border-color)]">
+            <h3 class="font-bold text-center">
+                <i class="fas fa-list mr-2"></i>قائمة التشغيل
+            </h3>
+        </div>
+        <div id="playlistItems"></div>
+    </div>
+
+    <main class="max-w-7xl mx-auto p-4 pt-8">
+        <div class="relative max-w-2xl mx-auto mb-8">
+            <div class="relative">
+                <input type="text" id="searchInput" 
+                       class="w-full bg-[var(--bg-card)] border-2 border-[var(--border-color)] rounded-full py-3 px-12 outline-none focus:border-[var(--accent-color)] text-[var(--text-main)]" 
+                       placeholder="ابحث عن قنوات، أفلام، مسلسلات..." 
+                       data-translate-placeholder="search"
+                       oninput="handleSearch()">
+                <i class="fas fa-search absolute right-5 top-1/2 -translate-y-1/2 text-gray-500"></i>
+                <button onclick="clearSearch()" class="absolute left-5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white hidden" id="clearSearchBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div id="searchResults" class="search-results"></div>
+        </div>
+
+        <div class="flex max-w-md mx-auto bg-[var(--bg-card)] border border-[var(--border-color)] p-1 rounded-2xl mb-8">
+            <button onclick="switchMode('live')" class="mode-btn active flex-1 py-2 rounded-xl text-sm font-bold" data-mode="live">
+                <i class="fas fa-tv mr-2"></i>
+                <span data-translate="live">مباشر</span>
+            </button>
+            
+            <button onclick="switchMode('movies')" class="mode-btn flex-1 py-2 rounded-xl text-sm font-bold" data-mode="movies">
+                <i class="fas fa-film mr-2"></i>
+                <span data-translate="movies">أفلام</span>
+            </button>
+            
+            <button onclick="switchMode('series')" class="mode-btn flex-1 py-2 rounded-xl text-sm font-bold" data-mode="series">
+                <i class="fas fa-clapperboard mr-2"></i>
+                <span data-translate="series">مسلسلات</span>
+            </button>
+        </div>
+
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h2 class="text-xl font-bold" id="categoryTitle">القنوات المباشرة</h2>
+                <p class="text-sm text-[var(--text-secondary)]" id="categoryCount">0 عنصر</p>
+            </div>
+            
+            <div class="flex gap-2">
+                <button onclick="shuffleContent()" class="bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-main)] px-4 py-2 rounded-lg text-sm">
+                    <i class="fas fa-random mr-2"></i>عشوائي
+                </button>
+                
+                <button onclick="toggleGridView()" class="bg-[var(--bg-card)] border border-[var(--border-color)] text-[var(--text-main)] px-4 py-2 rounded-lg text-sm">
+                    <i class="fas fa-th-large mr-2" id="gridIcon"></i>
+                    <span id="gridText">شبكة</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="categoriesContainer" class="flex overflow-x-auto gap-2 pb-4 mb-6 scrollbar-hide"></div>
+        
+        <div id="contentGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
+        
+        <div id="loader" class="hidden">
+            <div class="loader"></div>
+        </div>
+        
+        <button id="loadMoreBtn" onclick="loadMore()" 
+                class="hidden mx-auto mt-8 bg-[var(--bg-card)] border border-[var(--accent-color)] text-[var(--accent-color)] px-10 py-2 rounded-full font-bold hover:bg-[var(--accent-color)] hover:text-white transition">
+            <i class="fas fa-plus mr-2"></i>عرض المزيد
+        </button>
+    </main>
+
+    <footer class="bg-[var(--bg-card)] border-t border-[var(--border-color)] p-10 text-center mt-20">
+        <a href="https://dami-xpro.com/download" 
+           class="inline-flex items-center gap-3 bg-[var(--accent-color)] text-white px-8 py-3 rounded-full font-bold mb-8 hover:scale-105 transition">
+            <i class="fab fa-android"></i> 
+            <span data-translate="download_app">تحميل التطبيق</span>
+        </a>
+        
+        <p class="font-bold text-xl mb-2 text-[var(--text-main)]">
+            DAMI X-PRO &copy; <span id="year"></span>
+        </p>
+        
+        <p class="text-gray-500">
+            Designed & Developed by 
+            <span class="text-[var(--accent-color)]">Imad Eddine Lamrani</span>
+        </p>
+        
+        <div class="mt-6 flex justify-center gap-6 text-sm">
+            <a href="#" class="text-gray-500 hover:text-[var(--accent-color)]" onclick="openModal('about')">من نحن</a>
+            <a href="#" class="text-gray-500 hover:text-[var(--accent-color)]" onclick="openModal('privacy')">الخصوصية</a>
+            <a href="https://wa.me/212783539816" class="text-gray-500 hover:text-[var(--accent-color)]">الدعم</a>
+        </div>
+    </footer>
+
+    <div id="modal-about" class="modal" onclick="closeModal('about')">
+        <div class="modal-content text-center" onclick="event.stopPropagation()">
+            <h2 class="text-2xl font-bold text-[var(--accent-color)] mb-4" data-translate="about">من نحن</h2>
+            <p class="text-[var(--text-secondary)] mb-4">
+                DAMI X-PRO هو تطبيق رائد لمشاهدة المحتوى الترفيهي بدقة عالية، 
+                يوفر آلاف القنوات التلفزيونية المباشرة، الأفلام، المسلسلات، 
+                والوثائقيات بجودة تصل إلى 4K.
+            </p>
+            <p class="text-[var(--text-secondary)] mb-6">
+                تم تطوير هذا النظام بواسطة <span class="text-[var(--accent-color)] font-bold">عماد الدين لمراني</span> 
+                باستخدام أحدث التقنيات لضمان تجربة مشاهدة سلسة وبدون انقطاع.
+            </p>
+            <button class="mt-6 px-8 py-2 bg-[var(--accent-color)] text-white rounded-lg hover:opacity-90" 
+                    onclick="closeModal('about')">
+                إغلاق
+            </button>
+        </div>
+    </div>
+
+    <div id="modal-privacy" class="modal" onclick="closeModal('privacy')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h2 class="text-2xl font-bold text-[var(--accent-color)] mb-4 text-center" data-translate="privacy">
+                سياسة الخصوصية
+            </h2>
+            
+            <div class="text-[var(--text-secondary)] text-sm space-y-3 mb-6">
+                <p>نحن في DAMI X-PRO نحترم خصوصية مستخدمينا ونلتزم بحماية بياناتهم الشخصية.</p>
+                
+                <p><strong>البيانات التي نجمعها:</strong></p>
+                <ul class="list-disc pr-4 space-y-1">
+                    <li>معلومات تسجيل الدخول (اختياري)</li>
+                    <li>تفضيلات المشاهدة</li>
+                    <li>القنوات والمحتوى المفضل</li>
+                    <li>إحصائيات المشاهدة</li>
+                </ul>
+                
+                <p><strong>كيف نستخدم بياناتك:</strong></p>
+                <ul class="list-disc pr-4 space-y-1">
+                    <li>تحسين تجربة المستخدم</li>
+                    <li>تخصيص المحتوى المقترح</li>
+                    <li>تحسين جودة البث</li>
+                    <li>تطوير الميزات الجديدة</li>
+                </ul>
+                
+                <p>لا نقوم ببيع أو مشاركة بيانات المستخدمين مع أطراف ثالثة.</p>
+            </div>
+            
+            <button class="w-full py-2 bg-[var(--accent-color)] text-white rounded-lg hover:opacity-90" 
+                    onclick="closeModal('privacy')">
+                موافق
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURATION
+        const CONFIG = {
+            api: { 
+                base: "https://x-api.uk", 
+                user: "WD7zjb5LTuoDw", 
+                pass: "DrqM2s9Tu7fy",
+                formats: {
+                    live: "m3u8",
+                    movie: "mp4",
+                    series: "mp4"
+                }
+            },
+            player: {
+                defaultQuality: "auto",
+                autoplay: true,
+                volume: 0.8,
+                bufferSize: 30
+            }
+        };
+
+        const translations = {
+            ar: { 
+                home: "الرئيسية", 
+                about: "من نحن", 
+                contact: "اتصل بنا", 
+                privacy: "سياسة الخصوصية", 
+                download_app: "تحميل التطبيق", 
+                live: "مباشر", 
+                movies: "أفلام", 
+                series: "مسلسلات", 
+                all: "الكل", 
+                search: "ابحث هنا...",
+                loading: "جار التحميل...",
+                playing: "جاري التشغيل",
+                error: "حدث خطأ",
+                success: "تم بنجاح"
+            },
+            en: { 
+                home: "Home", 
+                about: "About Us", 
+                contact: "Contact", 
+                privacy: "Privacy", 
+                download_app: "Download App", 
+                live: "Live TV", 
+                movies: "Movies", 
+                series: "Series", 
+                all: "All", 
+                search: "Search here...",
+                loading: "Loading...",
+                playing: "Playing",
+                error: "Error occurred",
+                success: "Success"
+            },
+            fr: { 
+                home: "Accueil", 
+                about: "À propos", 
+                contact: "Contact", 
+                privacy: "Privée", 
+                download_app: "Télécharger", 
+                live: "Direct", 
+                movies: "Films", 
+                series: "Séries", 
+                all: "Tout", 
+                search: "Chercher...",
+                loading: "Chargement...",
+                playing: "Lecture",
+                error: "Erreur",
+                success: "Succès"
+            },
+            es: { 
+                home: "Inicio", 
+                about: "Nosotros", 
+                contact: "Contacto", 
+                privacy: "Privacidad", 
+                download_app: "Descargar", 
+                live: "En vivo", 
+                movies: "Películas", 
+                series: "Series", 
+                all: "Todo", 
+                search: "Buscar...",
+                loading: "Cargando...",
+                playing: "Reproduciendo",
+                error: "Error",
+                success: "Éxito"
+            }
+        };
+
+        // Application State
+        let currentLang = 'ar';
+        let currentMode = 'live';
+        let playerMode = 'hls';
+        let allData = [];
+        let filteredData = [];
+        let displayedCount = 0;
+        let currentStreamUrl = '';
+        let currentMediaName = '';
+        let currentMediaId = '';
+        let currentCategory = 'all';
+        let favorites = JSON.parse(localStorage.getItem('dami_favorites')) || [];
+        let isGridView = true;
+        let searchTimeout = null;
+        
+        // Video Player Elements
+        const videoPlayer = document.getElementById('html5Player');
+        const playerSection = document.getElementById('playerSection');
+        const playerTitle = document.getElementById('playerTitle');
+        const playerSubtitle = document.getElementById('playerSubtitle');
+        const playerInfo = document.getElementById('playerInfo');
+        const playerLoading = document.getElementById('playerLoading');
+        const qualitySelector = document.getElementById('qualitySelector');
+        const qualitySelect = document.getElementById('qualitySelect');
+        
+        // Custom Controls Elements
+        const progressBar = document.getElementById('progressBar');
+        const currentTime = document.getElementById('currentTime');
+        const totalTime = document.getElementById('totalTime');
+        const playIcon = document.getElementById('playIcon');
+        const volumeIcon = document.getElementById('volumeIcon');
+        const muteIcon = document.getElementById('muteIcon');
+        const volumeLevel = document.getElementById('volumeLevel');
+        
+        // Toast Elements
+        const toast = document.getElementById('toast');
+        const toastIcon = document.getElementById('toastIcon');
+        const toastTitle = document.getElementById('toastTitle');
+        const toastMessage = document.getElementById('toastMessage');
+
+        // ============= UI HELPER FUNCTIONS =============
+        
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('overlay').classList.toggle('hidden');
+        }
+
+        function openModal(id) {
+            document.getElementById('modal-' + id).style.display = 'flex';
+            toggleSidebar();
+        }
+
+        function closeModal(id) {
+            document.getElementById('modal-' + id).style.display = 'none';
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const icon = document.getElementById('themeIcon');
+            icon.className = document.body.classList.contains('light-mode') ? 'fas fa-sun' : 'fas fa-moon';
+            
+            // Save theme preference
+            localStorage.setItem('dami_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+        }
+
+        // ============= LANGUAGE MANAGEMENT =============
+        
+        function changeLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.documentElement.lang = lang;
+            
+            // Update all translatable elements
+            document.querySelectorAll('[data-translate]').forEach(el => {
+                el.textContent = translations[lang][el.dataset.translate];
+            });
+            
+            document.querySelectorAll('[data-translate-placeholder]').forEach(el => {
+                el.placeholder = translations[lang][el.dataset.translatePlaceholder];
+            });
+            
+            // Update category title
+            updateCategoryTitle();
+            
+            // Save language preference
+            localStorage.setItem('dami_language', lang);
+            
+            // Show notification
+            showToast(translations[lang].success, `تم تغيير اللغة إلى ${lang === 'ar' ? 'العربية' : lang === 'en' ? 'English' : lang === 'fr' ? 'Français' : 'Español'}`);
+        }
+
+        // ============= TOAST NOTIFICATIONS =============
+        
+        function showToast(title, message, type = 'success') {
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+            
+            // Set icon based on type
+            switch(type) {
+                case 'success':
+                    toastIcon.className = 'fas fa-check-circle text-green-500';
+                    break;
+                case 'warning':
+                    toastIcon.className = 'fas fa-exclamation-triangle text-yellow-500';
+                    break;
+                case 'error':
+                    toastIcon.className = 'fas fa-times-circle text-red-500';
+                    break;
+                case 'info':
+                    toastIcon.className = 'fas fa-info-circle text-blue-500';
+                    break;
+            }
+            
+            toast.classList.add('show');
+            
+            // Auto hide after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ============= SCROLL MANAGEMENT =============
+        
+        window.onscroll = () => {
+            const btn = document.getElementById('backToTop');
+            btn.classList.toggle('show', window.scrollY > 400);
+        };
+
+        // ============= API FUNCTIONS =============
+        
+        async function fetchAPI(action, params = {}) {
+            const url = new URL(`${CONFIG.api.base}/player_api.php`);
+            url.searchParams.append('username', CONFIG.api.user);
+            url.searchParams.append('password', CONFIG.api.pass);
+            url.searchParams.append('action', action);
+            
+            Object.keys(params).forEach(k => {
+                if (params[k]) url.searchParams.append(k, params[k]);
+            });
+            
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Fetch Error:', error);
+                showToast(translations[currentLang].error, 'فشل في تحميل البيانات', 'error');
+                return [];
+            }
+        }
+
+        // ============= CONTENT MANAGEMENT =============
+        
+        async function fetchCategories() {
+            const action = currentMode === 'live' ? 'get_live_categories' : 
+                          currentMode === 'movies' ? 'get_vod_categories' : 
+                          'get_series_categories';
+            
+            const categories = await fetchAPI(action);
+            const container = document.getElementById('categoriesContainer');
+            
+            if (!categories || categories.length === 0) {
+                container.innerHTML = '<p class="text-center w-full text-gray-500">لا توجد فئات</p>';
+                return;
+            }
+            
+            // Create category buttons
+            container.innerHTML = `
+                <button onclick="loadCategory('all')" class="cat-btn whitespace-nowrap px-5 py-1 rounded-full ${currentCategory === 'all' ? 'bg-[var(--accent-color)] text-white font-bold' : 'bg-[var(--bg-card)] border border-[var(--border-color)]'} text-sm transition-all">
+                    ${translations[currentLang].all}
+                </button>
+            `;
+            
+            categories.forEach(category => {
+                const isActive = currentCategory === category.category_id;
+                container.innerHTML += `
+                    <button onclick="loadCategory('${category.category_id}')" 
+                            class="cat-btn whitespace-nowrap px-5 py-1 rounded-full ${isActive ? 'bg-[var(--accent-color)] text-white font-bold' : 'bg-[var(--bg-card)] border border-[var(--border-color)]'} text-sm transition-all">
+                        ${category.category_name}
+                    </button>
+                `;
+            });
+            
+            // If no category is selected, load all
+            if (currentCategory === 'all') {
+                loadCategory('all');
+            }
+        }
+
+        async function loadCategory(categoryId) {
+            currentCategory = categoryId;
+            
+            // Update active category button
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-[var(--accent-color)]', 'text-white', 'font-bold');
+                btn.classList.add('bg-[var(--bg-card)]', 'border');
+            });
+            
+            const activeBtn = Array.from(document.querySelectorAll('.cat-btn')).find(btn => 
+                btn.textContent.includes(categoryId === 'all' ? translations[currentLang].all : '')
+            );
+            
+            if (activeBtn) {
+                activeBtn.classList.add('bg-[var(--accent-color)]', 'text-white', 'font-bold');
+                activeBtn.classList.remove('bg-[var(--bg-card)]', 'border');
+            }
+            
+            // Show loader
+            const grid = document.getElementById('contentGrid');
+            const loader = document.getElementById('loader');
+            grid.innerHTML = '';
+            loader.classList.remove('hidden');
+            
+            // Fetch data based on mode
+            let action, params = {};
+            
+            if (currentMode === 'live') {
+                action = 'get_live_streams';
+                if (categoryId !== 'all') params.category_id = categoryId;
+            } else if (currentMode === 'movies') {
+                action = 'get_vod_streams';
+                if (categoryId !== 'all') params.category_id = categoryId;
+            } else {
+                action = 'get_series';
+                if (categoryId !== 'all') params.category_id = categoryId;
+            }
+            
+            allData = await fetchAPI(action, params);
+            filteredData = [...allData];
+            
+            displayedCount = 0;
+            loader.classList.add('hidden');
+            
+            // Update category title and count
+            updateCategoryTitle();
+            
+            // Load first batch of content
+            loadMore();
+        }
+
+        function updateCategoryTitle() {
+            const categoryTitle = document.getElementById('categoryTitle');
+            const categoryCount = document.getElementById('categoryCount');
+            
+            let title = '';
+            switch(currentMode) {
+                case 'live':
+                    title = currentCategory === 'all' ? 'جميع القنوات المباشرة' : 'قنوات الفئة';
+                    break;
+                case 'movies':
+                    title = currentCategory === 'all' ? 'جميع الأفلام' : 'أفلام الفئة';
+                    break;
+                case 'series':
+                    title = currentCategory === 'all' ? 'جميع المسلسلات' : 'مسلسلات الفئة';
+                    break;
+            }
+            
+            categoryTitle.textContent = title;
+            categoryCount.textContent = `${allData.length} عنصر`;
+        }
+
+        function loadMore() {
+            const grid = document.getElementById('contentGrid');
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            
+            const itemsPerLoad = isGridView ? 24 : 12;
+            const nextBatch = filteredData.slice(displayedCount, displayedCount + itemsPerLoad);
+            
+            nextBatch.forEach(item => {
+                const card = createMediaCard(item);
+                grid.appendChild(card);
+            });
+            
+            displayedCount += nextBatch.length;
+            
+            // Show/hide load more button
+            loadMoreBtn.style.display = displayedCount < filteredData.length ? 'block' : 'none';
+        }
+
+        function createMediaCard(item) {
+            const card = document.createElement('div');
+            card.className = 'media-card';
+            
+            const isFavorite = favorites.some(fav => 
+                fav.id === (item.stream_id || item.vod_id || item.series_id)
+            );
+            
+            const mediaName = item.name || item.title || 'بدون اسم';
+            const mediaImage = item.stream_icon || item.cover || 'https://via.placeholder.com/150x85/121212/ffffff?text=No+Image';
+            const mediaId = item.stream_id || item.vod_id || item.series_id;
+            const mediaExtension = item.container_extension || 'mp4';
+            
+            // Determine media type badge
+            let typeBadge = '';
+            if (currentMode === 'live') {
+                typeBadge = '<span class="media-badge">مباشر</span>';
+            } else if (currentMode === 'movies') {
+                typeBadge = `<span class="media-badge">${mediaExtension.toUpperCase()}</span>`;
+            } else {
+                typeBadge = '<span class="media-badge">مسلسل</span>';
+            }
+            
+            card.innerHTML = `
+                <div class="relative">
+                    <img src="${mediaImage}" 
+                         class="media-logo" 
+                         alt="${mediaName}"
+                         onerror="this.src='https://via.placeholder.com/150x85/121212/ffffff?text=No+Image'">
+                    
+                    ${typeBadge}
+                    
+                    <div class="favorite-btn ${isFavorite ? 'active' : ''}" 
+                         onclick="toggleFavorite(event, '${mediaId}', '${mediaName.replace(/'/g, "\\'")}')">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    
+                    <div class="absolute bottom-2 left-2 right-2 bg-gradient-to-t from-black/80 to-transparent p-2 rounded-b-lg">
+                        <div class="text-xs font-bold truncate text-white">${mediaName}</div>
+                    </div>
+                </div>
+            `;
+            
+            // Add click event to play media
+            card.onclick = (e) => {
+                if (!e.target.closest('.favorite-btn')) {
+                    playMedia(item);
+                }
+            };
+            
+            return card;
+        }
+
+        // ============= SEARCH FUNCTIONALITY =============
+        
+        function handleSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const clearSearchBtn = document.getElementById('clearSearchBtn');
+            const searchResults = document.getElementById('searchResults');
+            const term = searchInput.value.trim().toLowerCase();
+            
+            // Show/hide clear button
+            clearSearchBtn.classList.toggle('hidden', term === '');
+            
+            // Clear previous timeout
+            if (searchTimeout) clearTimeout(searchTimeout);
+            
+            // Set new timeout for debouncing
+            searchTimeout = setTimeout(() => {
+                if (term.length < 2) {
+                    searchResults.classList.remove('show');
+                    searchResults.innerHTML = '';
+                    return;
+                }
+                
+                // Filter data based on search term
+                const results = allData.filter(item => {
+                    const name = (item.name || item.title || '').toLowerCase();
+                    return name.includes(term);
+                }).slice(0, 10); // Limit to 10 results
+                
+                // Update search results
+                if (results.length > 0) {
+                    searchResults.innerHTML = '';
+                    results.forEach(item => {
+                        const resultItem = document.createElement('div');
+                        resultItem.className = 'playlist-item';
+                        resultItem.innerHTML = `
+                            <img src="${item.stream_icon || item.cover || 'https://via.placeholder.com/50x30/121212/ffffff?text=...'}" 
+                                 class="w-10 h-6 object-cover rounded mr-3">
+                            <div class="truncate flex-1">${item.name || item.title}</div>
+                            <i class="fas fa-play text-gray-400"></i>
+                        `;
+                        
+                        resultItem.onclick = () => {
+                            playMedia(item);
+                            searchResults.classList.remove('show');
+                            searchInput.value = '';
+                            clearSearchBtn.classList.add('hidden');
+                        };
+                        
+                        searchResults.appendChild(resultItem);
+                    });
+                    
+                    searchResults.classList.add('show');
+                } else {
+                    searchResults.innerHTML = '<div class="p-4 text-center text-gray-500">لا توجد نتائج</div>';
+                    searchResults.classList.add('show');
+                }
+            }, 300);
+        }
+
+        function clearSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.getElementById('searchResults');
+            const clearSearchBtn = document.getElementById('clearSearchBtn');
+            
+            searchInput.value = '';
+            searchResults.classList.remove('show');
+            clearSearchBtn.classList.add('hidden');
+            
+            // Reset to original data
+            filteredData = [...allData];
+            displayedCount = 0;
+            
+            const grid = document.getElementById('contentGrid');
+            grid.innerHTML = '';
+            
+            loadMore();
+        }
+
+        // ============= FAVORITES MANAGEMENT =============
+        
+        function toggleFavorite(event, mediaId, mediaName) {
+            event.stopPropagation();
+            
+            const favoriteIndex = favorites.findIndex(fav => fav.id === mediaId);
+            
+            if (favoriteIndex > -1) {
+                // Remove from favorites
+                favorites.splice(favoriteIndex, 1);
+                event.target.closest('.favorite-btn').classList.remove('active');
+                showToast('تم الإزالة', `تمت إزالة ${mediaName} من المفضلة`, 'info');
+            } else {
+                // Add to favorites
+                favorites.push({
+                    id: mediaId,
+                    name: mediaName,
+                    type: currentMode,
+                    timestamp: Date.now()
+                });
+                event.target.closest('.favorite-btn').classList.add('active');
+                showToast('تم الإضافة', `تمت إضافة ${mediaName} إلى المفضلة`, 'success');
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('dami_favorites', JSON.stringify(favorites));
+        }
+
+        function showFavorites() {
+            // Clear current data
+            allData = [];
+            filteredData = [];
+            
+            // Convert favorites to media items format
+            filteredData = favorites.map(fav => ({
+                stream_id: fav.type === 'live' ? fav.id : undefined,
+                vod_id: fav.type === 'movies' ? fav.id : undefined,
+                series_id: fav.type === 'series' ? fav.id : undefined,
+                name: fav.name,
+                title: fav.name,
+                stream_icon: '',
+                cover: '',
+                container_extension: 'mp4'
+            }));
+            
+            // Update UI
+            const grid = document.getElementById('contentGrid');
+            grid.innerHTML = '';
+            
+            document.getElementById('categoryTitle').textContent = 'المفضلة';
+            document.getElementById('categoryCount').textContent = `${filteredData.length} عنصر`;
+            
+            // Hide categories
+            document.getElementById('categoriesContainer').innerHTML = '';
+            
+            // Load favorites
+            displayedCount = 0;
+            loadMore();
+            
+            // Close sidebar
+            toggleSidebar();
+        }
+
+        // ============= PLAYER FUNCTIONS =============
+        
+        function playMedia(item) {
+            currentMediaName = item.name || item.title || 'محتوى';
+            currentMediaId = item.stream_id || item.vod_id || item.series_id;
+            
+            // Build stream URL based on mode
+            if (currentMode === 'live') {
+                currentStreamUrl = `${CONFIG.api.base}/live/${CONFIG.api.user}/${CONFIG.api.pass}/${currentMediaId}.${CONFIG.api.formats.live}`;
+            } else if (currentMode === 'movies') {
+                const ext = item.container_extension || CONFIG.api.formats.movie;
+                currentStreamUrl = `${CONFIG.api.base}/movie/${CONFIG.api.user}/${CONFIG.api.pass}/${currentMediaId}.${ext}`;
+            } else {
+                const ext = item.container_extension || CONFIG.api.formats.series;
+                currentStreamUrl = `${CONFIG.api.base}/series/${CONFIG.api.user}/${CONFIG.api.pass}/${currentMediaId}.${ext}`;
+            }
+            
+            // Update player UI
+            playerTitle.textContent = currentMediaName;
+            playerSubtitle.textContent = `${currentMode === 'live' ? 'قناة مباشرة' : currentMode === 'movies' ? 'فيلم' : 'مسلسل'}`;
+            
+            // Show player
+            playerSection.classList.add('active');
+            playerLoading.style.display = 'flex';
+            playerInfo.innerHTML = `<i class="fas fa-info-circle mr-2"></i>${translations[currentLang].loading}`;
+            
+            // Scroll to player
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Load and play stream
+            loadStream();
+        }
+
+        function loadStream() {
+            // Reset player
+            videoPlayer.src = '';
+            videoPlayer.load();
+            
+            // Set volume
+            videoPlayer.volume = CONFIG.player.volume;
+            updateVolumeDisplay();
+            
+            // Configure player based on stream type
+            const isHLS = currentStreamUrl.includes('.m3u8');
+            const isStream = currentMode === 'live';
+            
+            // Show appropriate quality selector
+            qualitySelector.style.display = isHLS ? 'block' : 'none';
+            
+            // Set source
+            videoPlayer.src = currentStreamUrl;
+            
+            // Set MIME type if known
+            const extension = currentStreamUrl.split('.').pop().toLowerCase();
+            if (extension === 'mkv') {
+                videoPlayer.type = 'video/x-matroska';
+            } else if (extension === 'mp4') {
+                videoPlayer.type = 'video/mp4';
+            } else if (extension === 'm3u8' || extension === 'm3u') {
+                videoPlayer.type = 'application/x-mpegURL';
+            }
+            
+            // Try to play
+            const playPromise = videoPlayer.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    playerLoading.style.display = 'none';
+                    playerInfo.innerHTML = `<i class="fas fa-play-circle mr-2"></i>${translations[currentLang].playing}: ${currentMediaName}`;
+                    showToast('بدأ التشغيل', currentMediaName, 'success');
+                }).catch(error => {
+                    console.error('Autoplay failed:', error);
+                    playerLoading.style.display = 'none';
+                    playerInfo.innerHTML = `<i class="fas fa-info-circle mr-2"></i>انقر على زر التشغيل`;
+                });
+            }
+        }
+
+        function hidePlayer() {
+            playerSection.classList.remove('active');
+            
+            // Pause video
+            if (videoPlayer && !videoPlayer.paused) {
+                videoPlayer.pause();
+            }
+        }
+
+        function refreshStream() {
+            playerLoading.style.display = 'flex';
+            playerInfo.innerHTML = `<i class="fas fa-redo mr-2"></i>جاري إعادة التحميل...`;
+            
+            // Clear current source
+            videoPlayer.src = '';
+            videoPlayer.load();
+            
+            // Reload after short delay
+            setTimeout(() => {
+                loadStream();
+            }, 500);
+        }
+
+        function downloadMedia() {
+            if (!currentStreamUrl) return;
+            
+            const link = document.createElement('a');
+            link.href = currentStreamUrl;
+            link.download = `${currentMediaName.replace(/[^a-z0-9]/gi, '_')}.${currentStreamUrl.split('.').pop()}`;
+            link.target = '_blank';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showToast('بدأ التحميل', 'جاري تحميل الملف', 'info');
+        }
+
+        // ============= PLAYER MODE FUNCTIONS =============
+        
+        function updatePlayerMode() {
+            // Update active mode button
+            document.querySelectorAll('.player-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            event.target.classList.add('active');
+            
+            // Reload stream with new mode
+            refreshStream();
+        }
+
+        // ============= QUALITY MANAGEMENT =============
+        
+        function changeQuality(quality) {
+            // This would typically switch between different quality streams
+            // For now, we'll just show a notification
+            const qualityMap = {
+                'auto': 'تلقائي',
+                '360': '360p',
+                '480': '480p',
+                '720': '720p',
+                '1080': '1080p'
+            };
+            
+            showToast('تغيير الجودة', `تم تغيير الجودة إلى ${qualityMap[quality]}`, 'info');
+        }
+
+        // ============= CUSTOM CONTROLS =============
+        
+        function togglePlay() {
+            if (videoPlayer.paused) {
+                videoPlayer.play();
+                playIcon.className = 'fas fa-pause';
+            } else {
+                videoPlayer.pause();
+                playIcon.className = 'fas fa-play';
+            }
+        }
+
+        function seekVideo(event) {
+            const progressContainer = event.currentTarget;
+            const clickPosition = event.offsetX;
+            const containerWidth = progressContainer.offsetWidth;
+            const percentage = (clickPosition / containerWidth) * 100;
+            
+            videoPlayer.currentTime = (percentage / 100) * videoPlayer.duration;
+            progressBar.style.width = percentage + '%';
+        }
+
+        function changeVolume(event) {
+            const volumeContainer = event.currentTarget;
+            const clickPosition = event.offsetX;
+            const containerWidth = volumeContainer.offsetWidth;
+            let percentage = (clickPosition / containerWidth);
+            
+            // Clamp between 0 and 1
+            percentage = Math.max(0, Math.min(1, percentage));
+            
+            videoPlayer.volume = percentage;
+            updateVolumeDisplay();
+        }
+
+        function toggleMute() {
+            videoPlayer.muted = !videoPlayer.muted;
+            updateVolumeDisplay();
+        }
+
+        function updateVolumeDisplay() {
+            const volume = videoPlayer.muted ? 0 : videoPlayer.volume;
+            volumeLevel.style.width = (volume * 100) + '%';
+            
+            // Update icons
+            if (videoPlayer.muted || volume === 0) {
+                volumeIcon.className = 'fas fa-volume-mute text-white';
+                muteIcon.className = 'fas fa-volume-up';
+            } else if (volume < 0.5) {
+                volumeIcon.className = 'fas fa-volume-down text-white';
+                muteIcon.className = 'fas fa-volume-mute';
+            } else {
+                volumeIcon.className = 'fas fa-volume-up text-white';
+                muteIcon.className = 'fas fa-volume-mute';
+            }
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                if (playerSection.requestFullscreen) {
+                    playerSection.requestFullscreen();
+                } else if (playerSection.webkitRequestFullscreen) {
+                    playerSection.webkitRequestFullscreen();
+                } else if (playerSection.msRequestFullscreen) {
+                    playerSection.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+        }
+
+        // ============= VIDEO PLAYER EVENT LISTENERS =============
+        
+        videoPlayer.addEventListener('timeupdate', () => {
+            // Update progress bar
+            const percentage = (videoPlayer.currentTime / videoPlayer.duration) * 100 || 0;
+            progressBar.style.width = percentage + '%';
+            
+            // Update time display
+            currentTime.textContent = formatTime(videoPlayer.currentTime);
+            totalTime.textContent = formatTime(videoPlayer.duration);
+        });
+
+        videoPlayer.addEventListener('play', () => {
+            playIcon.className = 'fas fa-pause';
+        });
+
+        videoPlayer.addEventListener('pause', () => {
+            playIcon.className = 'fas fa-play';
+        });
+
+        videoPlayer.addEventListener('volumechange', () => {
+            updateVolumeDisplay();
+        });
+
+        videoPlayer.addEventListener('loadedmetadata', () => {
+            totalTime.textContent = formatTime(videoPlayer.duration);
+        });
+
+        videoPlayer.addEventListener('waiting', () => {
+            playerInfo.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i>جاري التخزين المؤقت...`;
+        });
+
+        videoPlayer.addEventListener('playing', () => {
+            playerInfo.innerHTML = `<i class="fas fa-play-circle mr-2"></i>${translations[currentLang].playing}: ${currentMediaName}`;
+        });
+
+        videoPlayer.addEventListener('error', (e) => {
+            console.error('Video error:', videoPlayer.error);
+            
+            let errorMessage = 'حدث خطأ في تشغيل الفيديو';
+            switch(videoPlayer.error.code) {
+                case 1: errorMessage = 'تم إلغاء التحميل'; break;
+                case 2: errorMessage = 'خطأ في الشبكة'; break;
+                case 3: errorMessage = 'خطأ في فك التشفير'; break;
+                case 4: errorMessage = 'التنسيق غير مدعوم'; break;
+            }
+            
+            playerInfo.innerHTML = `<i class="fas fa-exclamation-triangle mr-2"></i>${errorMessage}`;
+            playerLoading.style.display = 'none';
+            
+            showToast('خطأ في التشغيل', errorMessage, 'error');
+        });
+
+        // ============= UTILITY FUNCTIONS =============
+        
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '00:00';
+            
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function switchMode(mode) {
+            currentMode = mode;
+            currentCategory = 'all';
+            
+            // Update active mode button
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+            
+            // Update category title
+            updateCategoryTitle();
+            
+            // Fetch categories and content
+            fetchCategories();
+            
+            // Hide player if showing
+            hidePlayer();
+        }
+
+        function toggleGridView() {
+            isGridView = !isGridView;
+            
+            const grid = document.getElementById('contentGrid');
+            const gridIcon = document.getElementById('gridIcon');
+            const gridText = document.getElementById('gridText');
+            
+            if (isGridView) {
+                grid.classList.remove('grid-cols-1');
+                grid.classList.add('grid-cols-2', 'sm:grid-cols-3', 'md:grid-cols-4', 'lg:grid-cols-6');
+                gridIcon.className = 'fas fa-th-large mr-2';
+                gridText.textContent = 'شبكة';
+            } else {
+                grid.classList.remove('grid-cols-2', 'sm:grid-cols-3', 'md:grid-cols-4', 'lg:grid-cols-6');
+                grid.classList.add('grid-cols-1');
+                gridIcon.className = 'fas fa-list mr-2';
+                gridText.textContent = 'قائمة';
+            }
+            
+            // Reload content with new grid
+            grid.innerHTML = '';
+            displayedCount = 0;
+            loadMore();
+        }
+
+        function shuffleContent() {
+            // Shuffle filtered data
+            for (let i = filteredData.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [filteredData[i], filteredData[j]] = [filteredData[j], filteredData[i]];
+            }
+            
+            // Reload grid
+            const grid = document.getElementById('contentGrid');
+            grid.innerHTML = '';
+            displayedCount = 0;
+            loadMore();
+            
+            showToast('تم الخلط', 'تم ترتيب المحتوى عشوائياً', 'info');
+        }
+
+        // ============= INITIALIZATION =============
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set current year in footer
+            document.getElementById('year').textContent = new Date().getFullYear();
+            
+            // Load saved preferences
+            const savedTheme = localStorage.getItem('dami_theme');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                document.getElementById('themeIcon').className = 'fas fa-sun';
+            }
+            
+            const savedLanguage = localStorage.getItem('dami_language') || 'ar';
+            changeLanguage(savedLanguage);
+            document.getElementById('langSelect').value = savedLanguage;
+            
+            // Initialize video player volume
+            videoPlayer.volume = CONFIG.player.volume;
+            updateVolumeDisplay();
+            
+            // Load initial content
+            fetchCategories();
+            
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                // Space to play/pause when player is visible
+                if (e.code === 'Space' && playerSection.classList.contains('active')) {
+                    e.preventDefault();
+                    togglePlay();
+                }
+                
+                // Escape to close player
+                if (e.code === 'Escape') {
+                    hidePlayer();
+                }
+                
+                // F for fullscreen
+                if (e.code === 'KeyF' && playerSection.classList.contains('active')) {
+                    e.preventDefault();
+                    toggleFullscreen();
+                }
+                
+                // M to mute
+                if (e.code === 'KeyM' && playerSection.classList.contains('active')) {
+                    e.preventDefault();
+                    toggleMute();
+                }
+            });
+            
+            // Prevent right-click on player
+            videoPlayer.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+            });
+        });
+    </script>
+</body>
+</html>
